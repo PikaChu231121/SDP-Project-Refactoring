@@ -81,7 +81,7 @@ proj.linux/
 *.obj
 *.a
 # *.lib
-*.dll
+# *.dll
 *.so
 *.dylib
 *.pdb
