@@ -1,0 +1,90 @@
+# Build outputs
+win32-build/
+proj.win32/Debug/
+proj.win32/Release/
+proj.android/build/
+proj.ios_mac/build/
+proj.linux/build/
+bin/
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+
+# Visual Studio files
+*.sln
+*.suo
+*.vcxproj*
+*.user
+*.cache
+*.vs/
+*.filters
+
+# Xcode files
+*.xcodeproj/
+*.xcworkspace/
+project.xcworkspace/
+
+# Android Studio / IntelliJ IDEA files
+*.iml
+*.ipr
+*.iws
+.outline
+.idea/
+
+# Temporary and backup files
+*~
+*.tmp
+*.bak
+*.swp
+*.lock
+
+# Logs and databases
+*.log
+*.ldb
+
+# Library and framework binaries
+libs/
+frameworks/
+
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Cocos specific
+cocos2d/
+
+#cocos2d-x
+obj/
+assets/
+gen/
+out/
+.classpath
+.project
+.cproject
+
+# Proj specific
+proj.android/
+proj.ios_mac/
+proj.linux/
+
+# Other common ignores
+*.class
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.pdb
