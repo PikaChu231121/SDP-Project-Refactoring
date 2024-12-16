@@ -62,7 +62,9 @@ ehthumbs.db
 Desktop.ini
 
 # Cocos specific
-cocos2d/
+cocos2d/cocos/platform/android/java/build/
+cocos2d/cocos/platform/android/libcocos2dx/build/
+cocos2d/templates/
 
 #cocos2d-x
 obj/
