@@ -9,7 +9,7 @@
 1. 克隆仓库到本地：
 
    ```bash
-   git clone https://github.com/IamLCB/Awesome_Auto-Chess.git
+   git clone https://github.com/PikaChu231121/SDP-Project-Refactoring.git
    ```
 
 2. 在项目根目录下创建一个`build-win32`文件夹，在该目录下打开`cmd`并输入以下命令进行编译：
