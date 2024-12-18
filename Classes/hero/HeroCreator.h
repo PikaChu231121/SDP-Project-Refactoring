@@ -1,102 +1,61 @@
 #pragma once
-#include "hero.h"
-#include "tfns.h"
-#include "bqzs.h"
-#include "mlps.h"
-#include "qxsq.h"
-#include "wlshz.h"
-#include "yn.h"
-#include "ltzz.h"
-#include "snzx.h"
+#include "player/playerData.h"
+
+class Hero;
 
 class HeroCreator {
 public:
 	virtual Hero* createHero() = 0;
 	virtual ~HeroCreator() {}
+	// ºËÐÄÒµÎñÂß¼­
+	bool canPurchaseHero(int cost, const playerData& playerData);
+
+	bool hasSpaceForHero(const playerData& playerData);
+
+	void addHeroToWaitingList(Hero* hero, playerData& playerData);
+
+	static HeroCreator* getCreatorById(int heroId);
+
 protected:
-	Hero* initializeHero(Hero* hero) {
-		hero->setScale(0.25f);
-		hero->addChild(hero->createHealthBar(100));
-		return hero;
-	}
+	Hero* initializeHero(Hero* hero);
 };
 
 class TFNSCreator : public HeroCreator {
 public:
-	Hero* createHero() override {
-		tfns* tfnsHero = new tfns();
-		Hero* hero = tfnsHero->inittfns();
-		hero->type = TFNS;
-		return initializeHero(hero);
-	}
+	Hero* createHero() override;
 };
 
 class BQZSCreator : public HeroCreator {
 public:
-	Hero* createHero() override {
-		bqzs* bqzsHero = new bqzs();
-		Hero* hero = bqzsHero->initbqzs();
-		hero->type = BQZS;
-		return initializeHero(hero);
-	}
-};
+	Hero* createHero() override;
+}; 
 
 class MLPSCreator : public HeroCreator {
 public:
-	Hero* createHero() override {
-		mlps* mlpsHero = new mlps();
-		Hero* hero = mlpsHero->initmlps();
-		hero->type = MLPS;
-		return initializeHero(hero);
-	}
+	Hero* createHero() override;
 };
 
 class QXSQCreator : public HeroCreator {
 public:
-	Hero* createHero() override {
-		qxsq* qxsqHero = new qxsq();
-		Hero* hero = qxsqHero->initqxsq();
-		hero->type = QXSQ;
-		return initializeHero(hero);
-	}
+	Hero* createHero() override;
 };
 
 class WLSHZCreator : public HeroCreator {
 public:
-	Hero* createHero() override {
-		wlshz* wlshzHero = new wlshz();
-		Hero* hero = wlshzHero->initwlshz();
-		hero->type = WLSHZ;
-		return initializeHero(hero);
-	}
+	Hero* createHero() override;
 };
 
 class YNCreator : public HeroCreator {
 public:
-	Hero* createHero() override {
-		ynyn* ynHero = new ynyn();
-		Hero* hero = ynHero->initynyn();
-		hero->type = YN;
-		return initializeHero(hero);
-	}
+	Hero* createHero() override;
 };
 
 class LTZZCreator : public HeroCreator {
 public:
-	Hero* createHero() override {
-		ltzz* ltzzHero = new ltzz();
-		Hero* hero = ltzzHero->initltzz();
-		hero->type = LTZZ;
-		return initializeHero(hero);
-	}
+	Hero* createHero() override;
 };
 
 class SNZXCreator : public HeroCreator {
 public:
-	Hero* createHero() override {
-		snzx* snzxHero = new snzx();
-		Hero* hero = snzxHero->initsnzx();
-		hero->type = SNZX;
-		return initializeHero(hero);
-	}
+	Hero* createHero() override;
 };

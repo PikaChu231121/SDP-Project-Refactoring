@@ -95,62 +95,102 @@ void layerShop::cover(float x, float y) {
 }
 
 void layerShop::buy1(cocos2d::Ref* pSender) {
-	if (myPlayerData.heroForBuy[0].buy == false && canBuy(0, myPlayerData))
-	{
-		auto sprite = createHero(myPlayerData.heroForBuy[0].id);
-		myPlayerData.heroForBuy[0].buy = true;
-		ccArrayAppendObject(myPlayerData.waitingArray, sprite);
-		myPlayerData.playerHaveNewHero = true;
-		myPlayerData.playerMoney -= myPlayerData.heroForBuy[0].cost;
-		cover(790 - 350 * 4, 250);
+	if (myPlayerData.heroForBuy[0].buy == false) {
+		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[0].id);
+		if (creator) {
+			if (creator->canPurchaseHero(myPlayerData.heroForBuy[0].cost, myPlayerData)
+				&& creator->hasSpaceForHero(myPlayerData)) {
+
+				Hero* hero = creator->createHero();
+				creator->addHeroToWaitingList(hero, myPlayerData);
+
+				myPlayerData.heroForBuy[0].buy = true;
+				myPlayerData.playerMoney -= myPlayerData.heroForBuy[0].cost;
+				cover(790 - 350 * 4, 250);
+
+				delete creator;
+			}
+		}
 	}
 }
 
 void layerShop::buy2(cocos2d::Ref* pSender) {
-	if (myPlayerData.heroForBuy[1].buy == false && canBuy(1, myPlayerData))
-	{
-		auto sprite = createHero(myPlayerData.heroForBuy[1].id);
-		myPlayerData.heroForBuy[1].buy = true;
-		ccArrayAppendObject(myPlayerData.waitingArray, sprite);
-		myPlayerData.playerHaveNewHero = true;
-		myPlayerData.playerMoney -= myPlayerData.heroForBuy[1].cost;
-		cover(790 - 350 * 3, 250);
+	if (myPlayerData.heroForBuy[1].buy == false) {
+		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[1].id);
+		if (creator) {
+			if (creator->canPurchaseHero(myPlayerData.heroForBuy[1].cost, myPlayerData)
+				&& creator->hasSpaceForHero(myPlayerData)) {
+
+				Hero* hero = creator->createHero();
+				creator->addHeroToWaitingList(hero, myPlayerData);
+
+				myPlayerData.heroForBuy[1].buy = true;
+				myPlayerData.playerMoney -= myPlayerData.heroForBuy[1].cost;
+				cover(790 - 350 * 3, 250);
+
+				delete creator;
+			}
+		}
 	}
 }
 
 void layerShop::buy3(cocos2d::Ref* pSender) {
-	if (myPlayerData.heroForBuy[2].buy == false && canBuy(2, myPlayerData))
-	{
-		auto sprite = createHero(myPlayerData.heroForBuy[2].id);
-		myPlayerData.heroForBuy[2].buy = true;
-		ccArrayAppendObject(myPlayerData.waitingArray, sprite);
-		myPlayerData.playerHaveNewHero = true;
-		myPlayerData.playerMoney -= myPlayerData.heroForBuy[2].cost;
-		cover(790 - 350 * 2, 250);
+	if (myPlayerData.heroForBuy[2].buy == false) {
+		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[2].id);
+		if (creator) {
+			if (creator->canPurchaseHero(myPlayerData.heroForBuy[2].cost, myPlayerData)
+				&& creator->hasSpaceForHero(myPlayerData)) {
+
+				Hero* hero = creator->createHero();
+				creator->addHeroToWaitingList(hero, myPlayerData);
+
+				myPlayerData.heroForBuy[2].buy = true;
+				myPlayerData.playerMoney -= myPlayerData.heroForBuy[2].cost;
+				cover(790 - 350 * 2, 250);
+
+				delete creator;
+			}
+		}
 	}
 }
 
 void layerShop::buy4(cocos2d::Ref* pSender) {
-	if (myPlayerData.heroForBuy[3].buy == false && canBuy(3, myPlayerData))
-	{
-		auto sprite = createHero(myPlayerData.heroForBuy[3].id);
-		myPlayerData.heroForBuy[3].buy = true;
-		ccArrayAppendObject(myPlayerData.waitingArray, sprite);
-		myPlayerData.playerHaveNewHero = true;
-		myPlayerData.playerMoney -= myPlayerData.heroForBuy[3].cost;
-		cover(790 - 350 * 1, 250);
+	if (myPlayerData.heroForBuy[3].buy == false) {
+		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[3].id);
+		if (creator) {
+			if (creator->canPurchaseHero(myPlayerData.heroForBuy[3].cost, myPlayerData)
+				&& creator->hasSpaceForHero(myPlayerData)) {
+
+				Hero* hero = creator->createHero();
+				creator->addHeroToWaitingList(hero, myPlayerData);
+
+				myPlayerData.heroForBuy[3].buy = true;
+				myPlayerData.playerMoney -= myPlayerData.heroForBuy[3].cost;
+				cover(790 - 350 * 1, 250);
+
+				delete creator;
+			}
+		}
 	}
 }
 
 void layerShop::buy5(cocos2d::Ref* pSender) {
-	if (myPlayerData.heroForBuy[4].buy == false && canBuy(4, myPlayerData))
-	{
-		auto sprite = createHero(myPlayerData.heroForBuy[4].id);
-		myPlayerData.heroForBuy[4].buy = true;
-		ccArrayAppendObject(myPlayerData.waitingArray, sprite);
-		myPlayerData.playerHaveNewHero = true;
-		myPlayerData.playerMoney -= myPlayerData.heroForBuy[4].cost;
-		cover(790 - 350 * 0, 250);
+	if (myPlayerData.heroForBuy[4].buy == false) {
+		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[4].id);
+		if (creator) {
+			if (creator->canPurchaseHero(myPlayerData.heroForBuy[4].cost, myPlayerData)
+				&& creator->hasSpaceForHero(myPlayerData)) {
+
+				Hero* hero = creator->createHero();
+				creator->addHeroToWaitingList(hero, myPlayerData);
+
+				myPlayerData.heroForBuy[4].buy = true;
+				myPlayerData.playerMoney -= myPlayerData.heroForBuy[4].cost;
+				cover(790 - 350 * 0, 250);
+
+				delete creator;
+			}
+		}
 	}
 }
 

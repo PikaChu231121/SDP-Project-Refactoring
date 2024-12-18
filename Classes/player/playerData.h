@@ -7,7 +7,7 @@
 #define maxHeroNum 20		// 最大玩家英雄数量
 USING_NS_CC;
 
-
+class HeroCreator;
 
 class playerData : public Ref
 {
@@ -46,7 +46,7 @@ public:
 	//ccArray* equippedArray = ccArrayNew(100);		//玩家装备阵容（已装备）
 	//ccArray* unequippedArray = ccArrayNew(100);		//玩家装备背包（未装备）
 	//int equippedNum = 0;							//玩家已装备装备数量
-
+	friend class HeroCreator;
 };
 
 extern playerData myPlayerData;
