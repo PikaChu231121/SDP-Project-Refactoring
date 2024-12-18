@@ -11,34 +11,26 @@ void layerHero::playerArrayInit(ccArray* Array, int playerInfo)
 	for (int i = 0; i < Array->num; i++)
 	{
 		auto temp = static_cast<Hero*>(Array->arr[i]);
-
 		temp->setPosition(temp->getTempPosition());
 		temp->set(temp->getTempPosition());
 
-		auto temp1 = createHero(temp->getType());
-		if(temp->level == 2)
-			temp1->setScale(0.35f); 
-		if (playerInfo == 0) 
-		{
-			temp1->setPosition(temp->getTempPosition());
-			temp1->set(temp->getTempPosition());
-			temp1->setTempPosition();
-		}
-		else
-		{
-			temp1->setPosition(temp->getTempPosition());
-			temp1->set(temp->getTempPosition());
-			temp1->setTempPosition();
-			temp1->setPosition(10000, 10000);
-			temp1->set(10000, 10000);
-		}
-		temp1->setPlayer(temp1->ofPlayer);
-		if(ccArrayContainsObject(Array,temp))
-			ccArrayRemoveObject(Array, temp);
-		ccArrayInsertObjectAtIndex(Array, temp1, i);
-		this->addChild(temp1);
-		haveChess[pairReturn(temp->getTempPosition()).x][pairReturn(temp->getTempPosition()).y] = 1;
+		HeroCreator* creator = getHeroCreator(temp->getType());
+		if (creator) {
+			Hero* temp1 = creator->createHero();
+			if (temp->level == 2)
+				temp1->setScale(0.35f);
 
+			creator->initializeHeroPosition(temp1, temp->getTempPosition(), playerInfo == 0);
+			temp1->setPlayer(temp1->ofPlayer);
+
+			if (ccArrayContainsObject(Array, temp))
+				ccArrayRemoveObject(Array, temp);
+			ccArrayInsertObjectAtIndex(Array, temp1, i);
+			this->addChild(temp1);
+			haveChess[pairReturn(temp->getTempPosition()).x][pairReturn(temp->getTempPosition()).y] = 1;
+
+			delete creator;
+		}
 	}
 }
 
@@ -68,63 +60,25 @@ void layerHero::heroUpgrade(playerData& pData)
 {
 	for (int i = 0; i < 18; i++)
 	{
-		Hero* temp[3] = { nullptr,nullptr,nullptr };
-		ccArray* tempArray[3] = {};
-		int s = 0; //三个待升级棋子
-		if (pData.heroNum[i] >= 3 && i < 18)
+		if (pData.heroNum[i] >= 3)
 		{
-			for (int j = 0; j < pData.waitingArray->num; j++)
-			{
-				if ((static_cast<Hero*>(pData.waitingArray->arr[j]))->getType() == i)
-				{
-					if (s < 3)
-					{
-						temp[s] = static_cast<Hero*> (pData.waitingArray->arr[j]);
-						tempArray[s] = pData.waitingArray;
-						s++;
-					}
-					if (s == 3)
-						break;
-				}
-			}
-			if (s < 3)
-			{
-				for (int j = 0; j < pData.battleArray->num; j++)
-				{
-					if ((static_cast<Hero*>(pData.battleArray->arr[j]))->getType() == i)
-					{
-						if (s < 3)
-						{
-							temp[s] = static_cast<Hero*> (pData.battleArray->arr[j]);
-							tempArray[s] = pData.battleArray;
-							s++;
-						}
-						if (s == 3)
-							break;
+			Hero* temp[3] = { nullptr };
+			ccArray* tempArray[3] = {};
+			int s = 0;
 
-					}
-				}
-			}
-			if (temp[0] != nullptr && temp[1] != nullptr && temp[2] != nullptr && s == 3
-				&& temp[0]->getType() == i && temp[1]->getType() == i && temp[2]->getType() == i)  //防止Bug
-			{
-				auto upgrade_chess = upgradeHeroInit(temp[0]);
+			// 收集待升级的英雄  
+			collectUpgradeableHeroes(pData, i, temp, tempArray, s);
 
-				pData.heroNum[i] -= 3;
-				for (int k = 0; k < 3; k++)
-				{
-					haveChess[pairReturn(temp[k]->getTempPosition()).x][pairReturn(temp[k]->getTempPosition()).y] = 0;
-					temp[k]->retain();          //不retain在release下无法运行
-					temp[k]->removeFromParent();
-					if (ccArrayContainsObject(tempArray[k], temp[k]))
-					{
-						ccArrayRemoveObject(tempArray[k], temp[k]);    //_referanceCount>0 报错（加retain后貌似解决）
-						// temp[i]->autorelease();
-					}
+			if (canUpgradeHeroes(temp, s, i))
+			{
+				HeroCreator* creator = getHeroCreator(i);
+				if (creator) {
+					Hero* upgrade_chess = creator->upgradeHero(temp[0]);
+
+					handleUpgradeProcess(pData, temp, tempArray, upgrade_chess);
+					delete creator;
+					return;
 				}
-				ccArrayAppendObject(pData.waitingArray, upgrade_chess);
-				pData.playerHaveNewHero = 1;
-				return;
 			}
 		}
 	}
@@ -195,3 +149,55 @@ float layerHero::calDistance(Point p1, Point p2)
 	return sqrt(pow((p1.x - p2.x), 2)
 		+ pow((p1.y - p2.y), 2));
 }
+
+void layerHero::collectUpgradeableHeroes(playerData& pData, int heroType, Hero* temp[3], ccArray* tempArray[3], int& count)
+{
+	// 从等待区域收集  
+	collectFromArray(pData.waitingArray, heroType, temp, tempArray, count);
+
+	// 如果还需要,从战斗区域收集  
+	if (count < 3) {
+		collectFromArray(pData.battleArray, heroType, temp, tempArray, count);
+	}
+}
+
+void layerHero::collectFromArray(ccArray* array, int heroType, Hero* temp[3], ccArray* tempArray[3], int& count)
+{
+	for (int j = 0; j < array->num && count < 3; j++) {
+		Hero* hero = static_cast<Hero*>(array->arr[j]);
+		if (hero->getType() == heroType) {
+			temp[count] = hero;
+			tempArray[count] = array;
+			count++;
+		}
+	}
+}
+
+bool layerHero::canUpgradeHeroes(Hero* temp[3], int count, int heroType)
+{
+	return temp[0] != nullptr && temp[1] != nullptr && temp[2] != nullptr
+		&& count == 3
+		&& temp[0]->getType() == heroType
+		&& temp[1]->getType() == heroType
+		&& temp[2]->getType() == heroType;
+}
+
+void layerHero::handleUpgradeProcess(playerData& pData, Hero* temp[3], ccArray* tempArray[3], Hero* upgrade_chess)
+{
+	pData.heroNum[temp[0]->getType()] -= 3;
+
+	for (int k = 0; k < 3; k++) {
+		haveChess[pairReturn(temp[k]->getTempPosition()).x]
+			[pairReturn(temp[k]->getTempPosition()).y] = 0;
+		temp[k]->retain();
+		temp[k]->removeFromParent();
+		if (ccArrayContainsObject(tempArray[k], temp[k])) {
+			ccArrayRemoveObject(tempArray[k], temp[k]);
+		}
+	}
+
+	ccArrayAppendObject(pData.waitingArray, upgrade_chess);
+	pData.playerHaveNewHero = 1;
+}
+
+

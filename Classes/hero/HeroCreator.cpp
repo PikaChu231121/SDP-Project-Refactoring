@@ -28,6 +28,15 @@ void HeroCreator::addHeroToWaitingList(Hero* hero, playerData& playerData) {
 	}
 }
 
+Hero* HeroCreator::upgradeHero(Hero* hero)
+{
+	if (hero) {
+		hero->upLevel(hero);
+		hero->setScale(0.35f);
+	}
+	return hero;
+}
+
 HeroCreator* HeroCreator::getCreatorById(int heroId) {
 	switch (heroId) {
 	case TFNS:
@@ -49,6 +58,30 @@ HeroCreator* HeroCreator::getCreatorById(int heroId) {
 	default:
 		return nullptr;
 	}
+}
+
+void HeroCreator::initializeHeroPosition(Hero* hero, const Point& position, bool isVisible) {
+	if (hero) {
+		hero->setPosition(position);
+		hero->set(position);
+		hero->setTempPosition();
+		if (!isVisible) {
+			hero->setPosition(10000, 10000);
+			hero->set(10000, 10000);
+		}
+	}
+}
+
+float HeroCreator::calculateDistance(Hero* h1, Hero* h2)
+{
+	if (!h1 || !h2) return 0.0f;
+	return sqrt(pow((h1->getPosition().x - h2->getPosition().x), 2)
+		+ pow((h1->getPosition().y - h2->getPosition().y), 2));
+}
+
+float HeroCreator::calculateDistance(const Point& p1, const Point& p2)
+{
+	return sqrt(pow((p1.x - p2.x), 2) + pow((p1.y - p2.y), 2));
 }
 
 Hero* HeroCreator::initializeHero(Hero* hero) {

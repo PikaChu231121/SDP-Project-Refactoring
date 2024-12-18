@@ -14,7 +14,15 @@ public:
 
 	void addHeroToWaitingList(Hero* hero, playerData& playerData);
 
+	Hero* upgradeHero(Hero* hero);
+
 	static HeroCreator* getCreatorById(int heroId);
+
+	void initializeHeroPosition(Hero* hero, const Point& position, bool isVisible = true);
+
+	float calculateDistance(Hero* h1, Hero* h2);
+
+	float calculateDistance(const Point& p1, const Point& p2);
 
 protected:
 	Hero* initializeHero(Hero* hero);
