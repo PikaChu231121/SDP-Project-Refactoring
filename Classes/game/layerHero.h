@@ -24,7 +24,6 @@ public:
 
 private:
 	void heroUpgrade(playerData& pData);
-	Hero* layerHero::upgradeHeroInit(Hero* tmp);
 
 	friend class sceneGame;
 	float calDistance(Hero* h1, Hero* h2);

@@ -10,15 +10,24 @@
 #include "snzx.h"  
 
 bool HeroCreator::canPurchaseHero(int cost, const playerData& playerData) {
-	return playerData.playerMoney >= cost;
+	return playerData.playerMoney >= cost
+		&& playerData.waitingArray->num + playerData.battleArray->num < playerData.playerLevel + designedHeroNum;
 }
 
-bool HeroCreator::hasSpaceForHero(const playerData& playerData) {
-	int sum = 0;
-	for (int i = 0; i < CHESS_IN_A_ROW; i++) {
-		sum += haveChess[0][i];
+bool HeroCreator::processHeroPurchase(playerData& playerData, int heroId, int cost)
+{
+	Hero* newHero = createHeroById(heroId);
+	if (newHero) {
+		ccArrayAppendObject(playerData.waitingArray, newHero);
+		playerData.playerHaveNewHero = true;
+		playerData.playerMoney -= cost;
+		if (playerData.playerMoney < 0) {
+			playerData.playerMoney = 0;
+		}
+		playerData.heroNum[heroId]++;
+		return true;
 	}
-	return sum < designedHeroNum;
+	return false;
 }
 
 void HeroCreator::addHeroToWaitingList(Hero* hero, playerData& playerData) {
@@ -60,6 +69,17 @@ HeroCreator* HeroCreator::getCreatorById(int heroId) {
 	}
 }
 
+Hero* HeroCreator::createHeroById(int heroId)
+{
+	HeroCreator* creator = getCreatorById(heroId);
+	if (creator) {
+		Hero* hero = creator->createHero();
+		delete creator;
+		return hero;
+	}
+	return nullptr;
+}
+
 void HeroCreator::initializeHeroPosition(Hero* hero, const Point& position, bool isVisible) {
 	if (hero) {
 		hero->setPosition(position);
@@ -82,6 +102,15 @@ float HeroCreator::calculateDistance(Hero* h1, Hero* h2)
 float HeroCreator::calculateDistance(const Point& p1, const Point& p2)
 {
 	return sqrt(pow((p1.x - p2.x), 2) + pow((p1.y - p2.y), 2));
+}
+
+void HeroCreator::transferToBattleArray(playerData& playerData)
+{
+	int availableSlots = playerData.playerLevel - playerData.battleArray->num;
+	for (int i = 0; i < availableSlots && i < playerData.waitingArray->num; i++) {
+		ccArrayAppendObject(playerData.battleArray, playerData.waitingArray->arr[i]);
+		ccArrayRemoveObject(playerData.waitingArray, playerData.waitingArray->arr[i]);
+	}
 }
 
 Hero* HeroCreator::initializeHero(Hero* hero) {

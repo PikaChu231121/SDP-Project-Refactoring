@@ -8,9 +8,9 @@ public:
 	virtual Hero* createHero() = 0;
 	virtual ~HeroCreator() {}
 	// ºËÐÄÒµÎñÂß¼­
-	bool canPurchaseHero(int cost, const playerData& playerData);
+	static bool canPurchaseHero(int cost, const playerData& playerData);
 
-	bool hasSpaceForHero(const playerData& playerData);
+	static bool processHeroPurchase(playerData& playerData, int heroId, int cost);
 
 	void addHeroToWaitingList(Hero* hero, playerData& playerData);
 
@@ -18,11 +18,15 @@ public:
 
 	static HeroCreator* getCreatorById(int heroId);
 
+	static Hero* createHeroById(int heroId);
+
 	void initializeHeroPosition(Hero* hero, const Point& position, bool isVisible = true);
 
 	float calculateDistance(Hero* h1, Hero* h2);
 
 	float calculateDistance(const Point& p1, const Point& p2);
+
+	static void transferToBattleArray(playerData& playerData);
 
 protected:
 	Hero* initializeHero(Hero* hero);

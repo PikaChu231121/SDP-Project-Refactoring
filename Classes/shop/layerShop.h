@@ -41,11 +41,7 @@ public:
 	void openLayer(cocos2d::Ref* pSender);
 
 	void cover(float x, float y);
-	void buy1(cocos2d::Ref* pSender);
-	void buy2(cocos2d::Ref* pSender);
-	void buy3(cocos2d::Ref* pSender);
-	void buy4(cocos2d::Ref* pSender);
-	void buy5(cocos2d::Ref* pSender);
+	void buyHero(int index);
 	bool canBuy(int x,playerData& playerData);
 
 	cocos2d::MenuItemImage* closeShopButton;

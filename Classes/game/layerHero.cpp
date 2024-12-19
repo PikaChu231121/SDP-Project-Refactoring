@@ -10,24 +10,24 @@ void layerHero::playerArrayInit(ccArray* Array, int playerInfo)
 {
 	for (int i = 0; i < Array->num; i++)
 	{
-		auto temp = static_cast<Hero*>(Array->arr[i]);
-		temp->setPosition(temp->getTempPosition());
-		temp->set(temp->getTempPosition());
+		auto currentHero = static_cast<Hero*>(Array->arr[i]);
+		currentHero->setPosition(currentHero->getTempPosition());
+		currentHero->set(currentHero->getTempPosition());
 
-		HeroCreator* creator = getHeroCreator(temp->getType());
+		HeroCreator* creator = getHeroCreator(currentHero->getType());
 		if (creator) {
-			Hero* temp1 = creator->createHero();
-			if (temp->level == 2)
-				temp1->setScale(0.35f);
+			Hero* newHero = creator->createHero();
+			if (currentHero->level == 2)
+				newHero->setScale(0.35f);
 
-			creator->initializeHeroPosition(temp1, temp->getTempPosition(), playerInfo == 0);
-			temp1->setPlayer(temp1->ofPlayer);
+			creator->initializeHeroPosition(newHero, currentHero->getTempPosition(), playerInfo == 0);
+			newHero->setPlayer(newHero->ofPlayer);
 
-			if (ccArrayContainsObject(Array, temp))
-				ccArrayRemoveObject(Array, temp);
-			ccArrayInsertObjectAtIndex(Array, temp1, i);
-			this->addChild(temp1);
-			haveChess[pairReturn(temp->getTempPosition()).x][pairReturn(temp->getTempPosition()).y] = 1;
+			if (ccArrayContainsObject(Array, currentHero))
+				ccArrayRemoveObject(Array, currentHero);
+			ccArrayInsertObjectAtIndex(Array, newHero, i);
+			this->addChild(newHero);
+			haveChess[pairReturn(currentHero->getTempPosition()).x][pairReturn(currentHero->getTempPosition()).y] = 1;
 
 			delete creator;
 		}
@@ -62,31 +62,26 @@ void layerHero::heroUpgrade(playerData& pData)
 	{
 		if (pData.heroNum[i] >= 3)
 		{
-			Hero* temp[3] = { nullptr };
-			ccArray* tempArray[3] = {};
-			int s = 0;
+			Hero* heroesToUpgrade[3] = { nullptr };
+			ccArray* sourceArrays[3] = {};
+			int upgradeCount = 0;
 
 			// 收集待升级的英雄  
-			collectUpgradeableHeroes(pData, i, temp, tempArray, s);
+			collectUpgradeableHeroes(pData, i, heroesToUpgrade, sourceArrays, upgradeCount);
 
-			if (canUpgradeHeroes(temp, s, i))
+			if (canUpgradeHeroes(heroesToUpgrade, upgradeCount, i))
 			{
 				HeroCreator* creator = getHeroCreator(i);
 				if (creator) {
-					Hero* upgrade_chess = creator->upgradeHero(temp[0]);
+					Hero* upgrade_chess = creator->upgradeHero(heroesToUpgrade[0]);
 
-					handleUpgradeProcess(pData, temp, tempArray, upgrade_chess);
+					handleUpgradeProcess(pData, heroesToUpgrade, sourceArrays, upgrade_chess);
 					delete creator;
 					return;
 				}
 			}
 		}
 	}
-}
-Hero* layerHero::upgradeHeroInit(Hero* tmp)
-{
-	tmp->upLevel(tmp);
-	return tmp;
 }
 
 /*PC_Player相关*/

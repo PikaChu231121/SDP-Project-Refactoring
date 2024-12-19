@@ -14,24 +14,27 @@ Hero* aiPlayer::soldHero()
 
 void aiPlayer::judgeGold()
 {
-	refresh();					//刷新商店
+	refresh();	// 刷新商店
 	opPlayerData.playerMoney += 2;
 	checkUpgrade();
-	judgeExp();					//买经验
-	if (checkLimit() && checkHighGoldHero() && opPlayerData.playerMoney >= 2)//不超过人数限制且购买了高费英雄
-		refresh();//刷新商店
+	judgeExp();	// 买经验
+	if (checkLimit() && checkHighGoldHero() && opPlayerData.playerMoney >= 2) // 不超过人数限制且购买了高费英雄
+		refresh(); // 刷新商店
 }
 
 bool aiPlayer::checkUpgrade()
 {
-	bool ifUpgrade = false;
-	for (int i = 1; i < maxHeroNum; i++)//遍历
-	{
-		if (opPlayerData.heroNum[i] % 3 == 2 && checkLimit())	//如果有升级条件并且不会超过人数限制
-			if (aiBuy(i))	//如果能够成功买入，则返回能够升级
-				ifUpgrade = true;
+	// 使用 HeroCreator 的 canPurchaseHero 函数检查是否可以购买英雄
+	if (!HeroCreator::canPurchaseHero(0, opPlayerData)) {
+		return false;
 	}
-	return ifUpgrade;
+
+	for (int i = 1; i < maxHeroNum; i++) {
+		if (opPlayerData.heroNum[i] % 3 == 2 && aiBuy(i)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 bool aiPlayer::checkLimit()
@@ -60,7 +63,6 @@ bool aiPlayer::checkLimit()
 void aiPlayer::judgeExp()
 {
 	int expGap = myPlayerData.playerExp - opPlayerData.playerExp;
-	//?????????//while可用否？
 	//while (expGap > 5 && opPlayerData.playerMoney >= 4)
 	//{
 	if (expGap > 5 && opPlayerData.playerMoney >= 4) {
@@ -92,31 +94,16 @@ bool aiPlayer::checkHighGoldHero()
 
 bool aiPlayer::aiBuy(int id)
 {
-	if (opPlayerData.waitingArray->num + opPlayerData.battleArray->num < opPlayerData.playerLevel + designedHeroNum)
-	{
-		if (opPlayerData.playerMoney >= opPlayerData.heroForBuy[id].cost && !opPlayerData.heroForBuy[id].buy)
-		{
-			Hero* newHero = createHero(opPlayerData.heroForBuy[id].id);
-			ccArrayAppendObject(opPlayerData.waitingArray, newHero);
-			opPlayerData.playerHaveNewHero = true;
-			opPlayerData.heroForBuy[id].buy = true;
-			opPlayerData.playerMoney -= opPlayerData.heroForBuy[id].cost;
-			opPlayerData.heroNum[id]++;
-			if (opPlayerData.playerMoney < 0)
-				opPlayerData.playerMoney = 0;
-			return true;
-		}
-		else
-			return false;
+	if (HeroCreator::canPurchaseHero(opPlayerData.heroForBuy[id].cost, opPlayerData)) {
+		return HeroCreator::processHeroPurchase(opPlayerData, opPlayerData.heroForBuy[id].id, opPlayerData.heroForBuy[id].cost);
 	}
-	else
-		return false;
+	return false;
 }
 
 void aiPlayer::refresh()
 {
 	int hero = 0;
-	srand((unsigned int)time(NULL));
+	srand((unsigned int)time(0));
 	for (int i = 0; i < 5; i++)
 	{
 		hero = rand() % 7 + 1;
@@ -132,19 +119,7 @@ void aiPlayer::refresh()
 
 void aiPlayer::creatBattleArray()
 {
-	for (int i = 0; i < opPlayerData.waitingArray->num; i++)
-	{
-		if (opPlayerData.playerLevel > 0 && opPlayerData.battleArray->num < opPlayerData.playerLevel)
-		{
-			ccArrayAppendObject(opPlayerData.battleArray, opPlayerData.waitingArray->arr[i]);
-			ccArrayRemoveObject(opPlayerData.waitingArray, opPlayerData.waitingArray->arr[i]);
-		}
-	}
-	for (int j = opPlayerData.battleArray->num; j < opPlayerData.playerLevel; j++)
-	{
-		ccArrayAppendObject(opPlayerData.battleArray, opPlayerData.waitingArray->arr[j]);
-		ccArrayRemoveObject(opPlayerData.waitingArray, opPlayerData.waitingArray->arr[j]);
-	}
+	HeroCreator::transferToBattleArray(opPlayerData);
 }
 
 aiPlayer AIPlayer;

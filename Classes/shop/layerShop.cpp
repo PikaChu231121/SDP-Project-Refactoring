@@ -94,99 +94,17 @@ void layerShop::cover(float x, float y) {
 	cover->setPosition(x, y);
 }
 
-void layerShop::buy1(cocos2d::Ref* pSender) {
-	if (myPlayerData.heroForBuy[0].buy == false) {
-		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[0].id);
+void layerShop::buyHero(int index) {
+	if (myPlayerData.heroForBuy[index].buy == false) {
+		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[index].id);
 		if (creator) {
-			if (creator->canPurchaseHero(myPlayerData.heroForBuy[0].cost, myPlayerData)
-				&& creator->hasSpaceForHero(myPlayerData)) {
-
+			if (creator->canPurchaseHero(myPlayerData.heroForBuy[index].cost, myPlayerData)) {
 				Hero* hero = creator->createHero();
 				creator->addHeroToWaitingList(hero, myPlayerData);
 
-				myPlayerData.heroForBuy[0].buy = true;
-				myPlayerData.playerMoney -= myPlayerData.heroForBuy[0].cost;
-				cover(790 - 350 * 4, 250);
-
-				delete creator;
-			}
-		}
-	}
-}
-
-void layerShop::buy2(cocos2d::Ref* pSender) {
-	if (myPlayerData.heroForBuy[1].buy == false) {
-		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[1].id);
-		if (creator) {
-			if (creator->canPurchaseHero(myPlayerData.heroForBuy[1].cost, myPlayerData)
-				&& creator->hasSpaceForHero(myPlayerData)) {
-
-				Hero* hero = creator->createHero();
-				creator->addHeroToWaitingList(hero, myPlayerData);
-
-				myPlayerData.heroForBuy[1].buy = true;
-				myPlayerData.playerMoney -= myPlayerData.heroForBuy[1].cost;
-				cover(790 - 350 * 3, 250);
-
-				delete creator;
-			}
-		}
-	}
-}
-
-void layerShop::buy3(cocos2d::Ref* pSender) {
-	if (myPlayerData.heroForBuy[2].buy == false) {
-		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[2].id);
-		if (creator) {
-			if (creator->canPurchaseHero(myPlayerData.heroForBuy[2].cost, myPlayerData)
-				&& creator->hasSpaceForHero(myPlayerData)) {
-
-				Hero* hero = creator->createHero();
-				creator->addHeroToWaitingList(hero, myPlayerData);
-
-				myPlayerData.heroForBuy[2].buy = true;
-				myPlayerData.playerMoney -= myPlayerData.heroForBuy[2].cost;
-				cover(790 - 350 * 2, 250);
-
-				delete creator;
-			}
-		}
-	}
-}
-
-void layerShop::buy4(cocos2d::Ref* pSender) {
-	if (myPlayerData.heroForBuy[3].buy == false) {
-		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[3].id);
-		if (creator) {
-			if (creator->canPurchaseHero(myPlayerData.heroForBuy[3].cost, myPlayerData)
-				&& creator->hasSpaceForHero(myPlayerData)) {
-
-				Hero* hero = creator->createHero();
-				creator->addHeroToWaitingList(hero, myPlayerData);
-
-				myPlayerData.heroForBuy[3].buy = true;
-				myPlayerData.playerMoney -= myPlayerData.heroForBuy[3].cost;
-				cover(790 - 350 * 1, 250);
-
-				delete creator;
-			}
-		}
-	}
-}
-
-void layerShop::buy5(cocos2d::Ref* pSender) {
-	if (myPlayerData.heroForBuy[4].buy == false) {
-		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[4].id);
-		if (creator) {
-			if (creator->canPurchaseHero(myPlayerData.heroForBuy[4].cost, myPlayerData)
-				&& creator->hasSpaceForHero(myPlayerData)) {
-
-				Hero* hero = creator->createHero();
-				creator->addHeroToWaitingList(hero, myPlayerData);
-
-				myPlayerData.heroForBuy[4].buy = true;
-				myPlayerData.playerMoney -= myPlayerData.heroForBuy[4].cost;
-				cover(790 - 350 * 0, 250);
+				myPlayerData.heroForBuy[index].buy = true;
+				myPlayerData.playerMoney -= myPlayerData.heroForBuy[index].cost;
+				cover(790 - 350 * (4 - index), 250); // 使用 index 计算遮罩位置
 
 				delete creator;
 			}
@@ -221,45 +139,23 @@ void layerShop::shop() {
 	refresh(myPlayerData);
 
 	/*------------------buy----------------------------*/
-	heroShop(0);
-	auto buy1 = MenuItemImage::create(myPlayerData.heroForBuy[0].picName, myPlayerData.heroForBuy[0].picName,
-		CC_CALLBACK_1(layerShop::buy1, this));
-	auto Buy1 = Menu::create(buy1, nullptr);
-	subLayer->addChild(Buy1, 1);
-	Buy1->setPosition(790 - 350 * 4, 250);
-	buy1->setScale(0.5f);
+	for (int i = 0; i < 5; i++) {
+		heroShop(i);
 
-	heroShop(1);
-	auto buy2 = MenuItemImage::create(myPlayerData.heroForBuy[1].picName, myPlayerData.heroForBuy[1].picName,
-		CC_CALLBACK_1(layerShop::buy2, this));
-	auto Buy2 = Menu::create(buy2, NULL);
-	subLayer->addChild(Buy2, 1);
-	Buy2->setPosition(790 - 350 * 3, 250);
-	buy2->setScale(0.5f);
+		// 创建购买按钮，使用lambda表达式绑定购买函数和索引
+		auto buyButton = MenuItemImage::create(
+			myPlayerData.heroForBuy[i].picName,
+			myPlayerData.heroForBuy[i].picName,
+			[this, i](cocos2d::Ref* pSender) {
+				buyHero(i);
+			}
+		);
 
-	heroShop(2);
-	auto buy3 = MenuItemImage::create(myPlayerData.heroForBuy[2].picName, myPlayerData.heroForBuy[2].picName,
-		CC_CALLBACK_1(layerShop::buy3, this));
-	auto Buy3 = Menu::create(buy3, NULL);
-	subLayer->addChild(Buy3, 1);
-	Buy3->setPosition(790 - 350 * 2, 250);
-	buy3->setScale(0.5f);
-
-	heroShop(3);
-	auto buy4 = MenuItemImage::create(myPlayerData.heroForBuy[3].picName, myPlayerData.heroForBuy[3].picName,
-		CC_CALLBACK_1(layerShop::buy4, this));
-	auto Buy4 = Menu::create(buy4, NULL);
-	subLayer->addChild(Buy4, 1);
-	Buy4->setPosition(790 - 350 * 1, 250);
-	buy4->setScale(0.5f);
-
-	heroShop(4);
-	auto buy5 = MenuItemImage::create(myPlayerData.heroForBuy[4].picName, myPlayerData.heroForBuy[4].picName,
-		CC_CALLBACK_1(layerShop::buy5, this));
-	auto Buy5 = Menu::create(buy5, NULL);
-	subLayer->addChild(Buy5, 1);
-	Buy5->setPosition(790 - 350 * 0, 250);
-	buy5->setScale(0.5f);
+		auto buyMenu = Menu::create(buyButton, nullptr);
+		subLayer->addChild(buyMenu, 1);
+		buyMenu->setPosition(790 - 350 * (4 - i), 250);
+		buyButton->setScale(0.5f);
+	}
 
 	/*----------------------close store-----------------*/
 	closeShop();
