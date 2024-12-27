@@ -1,3 +1,4 @@
+ï»¿// Refactored with Factory Method Pattern
 #include "layerShop.h"
 
 layerShop::layerShop() {
@@ -76,7 +77,7 @@ void layerShop::closeLayer(cocos2d::Ref* pSender)
 		openShopButton->setVisible(true);
 	}
 	if (closeShopButton != nullptr) {
-		// Òş²Ø°´Å¥
+		// éšè—æŒ‰é’®
 		closeShopButton->setVisible(false);
 	}
 }
@@ -104,7 +105,7 @@ void layerShop::buyHero(int index) {
 
 				myPlayerData.heroForBuy[index].buy = true;
 				myPlayerData.playerMoney -= myPlayerData.heroForBuy[index].cost;
-				cover(790 - 350 * (4 - index), 250); // Ê¹ÓÃ index ¼ÆËãÕÚÕÖÎ»ÖÃ
+				cover(790 - 350 * (4 - index), 250); // ä½¿ç”¨ index è®¡ç®—é®ç½©ä½ç½®
 
 				delete creator;
 			}
@@ -142,7 +143,7 @@ void layerShop::shop() {
 	for (int i = 0; i < 5; i++) {
 		heroShop(i);
 
-		// ´´½¨¹ºÂò°´Å¥£¬Ê¹ÓÃlambda±í´ïÊ½°ó¶¨¹ºÂòº¯ÊıºÍË÷Òı
+		// åˆ›å»ºè´­ä¹°æŒ‰é’®ï¼Œä½¿ç”¨lambdaè¡¨è¾¾å¼ç»‘å®šè´­ä¹°å‡½æ•°å’Œç´¢å¼•
 		auto buyButton = MenuItemImage::create(
 			myPlayerData.heroForBuy[i].picName,
 			myPlayerData.heroForBuy[i].picName,

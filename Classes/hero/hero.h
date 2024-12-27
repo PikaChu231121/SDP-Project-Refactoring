@@ -1,3 +1,4 @@
+ï»¿// Refactored with Factory Method Pattern
 #ifndef _HERO_H_
 #define _HERO_H_
 #include"cocos2d.h"
@@ -23,35 +24,35 @@ public:
 	string name, skillname;
 	ProgressTimer* healthBar;
 	int type = 0;
-	string advice; // Ç°ÅÅÖĞÅÅºóÅÅ½¨Òé
+	string advice; // å‰æ’ä¸­æ’åæ’å»ºè®®
 	int skillType = -1;
 	int blood = 500;
-	int maxBlood = 500; // ÑªÁ¿
-	int level = 1;  // µÈ¼¶(Ä¿Ç°Ö»ÉèÖÃÁ½¸öµÈ¼¶)
-	int attack = 50;  // ¹¥»÷Á¦
-	int protect = 0; // »¤¼×
-	int magicPro = 10; // Ä§¿¹
-	int state; // ¼¼ÄÜ×´Ì¬
+	int maxBlood = 500; // è¡€é‡
+	int level = 1;  // ç­‰çº§(ç›®å‰åªè®¾ç½®ä¸¤ä¸ªç­‰çº§)
+	int attack = 50;  // æ”»å‡»åŠ›
+	int protect = 0; // æŠ¤ç”²
+	int magicPro = 10; // é­”æŠ—
+	int state; // æŠ€èƒ½çŠ¶æ€
 
-	double speed = 0.6; // ¹¥ËÙ
+	double speed = 0.6; // æ”»é€Ÿ
 	double attackRate = 1;
 
-	int blue = 0; // µ±Ç°À¶Ìõ
-	const int blueMax = 150; // ×î´óÀ¶ÌõÖµ
+	int blue = 0; // å½“å‰è“æ¡
+	const int blueMax = 150; // æœ€å¤§è“æ¡å€¼
 	double movespeed = 1;
-	double attackDistance = 100; // ¹¥»÷¾àÀë
-	// Íæ¼ÒÏà¹Ø
-	int ofPlayer = 0; // ËùÊôÍæ¼Ò
-	int price = 1; // ËùĞè½ğ±Ò
-	int soldMoney = price; // ÂôµôËù»ñ½ğ±Ò
+	double attackDistance = 100; // æ”»å‡»è·ç¦»
+	// ç©å®¶ç›¸å…³
+	int ofPlayer = 0; // æ‰€å±ç©å®¶
+	int price = 1; // æ‰€éœ€é‡‘å¸
+	int soldMoney = price; // å–æ‰æ‰€è·é‡‘å¸
 
 
 public:
-	string picturename; // Í¼Æ¬Ãû×Ö
-	int picturenum; // Í¼Æ¬ÕÅÊı
-	virtual void Play() {} // ÓÃÓÚ¸÷¸ö×ÓÀàµÄ½øĞĞ
+	string picturename; // å›¾ç‰‡åå­—
+	int picturenum; // å›¾ç‰‡å¼ æ•°
+	virtual void Play() {} // ç”¨äºå„ä¸ªå­ç±»çš„è¿›è¡Œ
 	Hero() = default;
-	bool isDead(); // ÅĞ¶ÏÊÇ·ñËÀÍö
+	bool isDead(); // åˆ¤æ–­æ˜¯å¦æ­»äº¡
 	void update(Hero* my, Hero* enemy, float dt);
 	Hero* getEnemyByDistance(Hero* myHero, bool mode, bool isMyHero);
 	bool isInAttackRange(Hero* myHero, Hero* enemyHero);
@@ -61,7 +62,7 @@ public:
 	void recover();
 	bool connection(const playerData& myPlayerData);
 
-	/*******************************12.30Ìí¼Ó(¿ÉÄÜÓĞÒÑ¾­Ìí¼Ó¹ıµÄ£¬Èçtype)*************************/
+	/*******************************12.30æ·»åŠ (å¯èƒ½æœ‰å·²ç»æ·»åŠ è¿‡çš„ï¼Œå¦‚type)*************************/
 
 	float x = 0.f;
 	float y = 0.f;
@@ -69,25 +70,25 @@ public:
 
 	float xTemp = x;
 	float yTemp = y;
-	// ÓÃÓÚ¼ÇÂ¼Ó¢ĞÛ½øĞĞÒÆ¶¯²Ù×÷Ç°µÄ×ø±ê£¬³õÊ¼ÉèÖÃÎªÓëÔ­Ê¼×ø±êÒ»ÖÂ
+	// ç”¨äºè®°å½•è‹±é›„è¿›è¡Œç§»åŠ¨æ“ä½œå‰çš„åæ ‡ï¼Œåˆå§‹è®¾ç½®ä¸ºä¸åŸå§‹åæ ‡ä¸€è‡´
 
 	void set(float x1, float y1) { x = x1, y = y1; }
 	void set(Point point) { x = point.x; y = point.y; }
-	// ¶ÔÓ¦Á½ÖÖÖØÔØĞÎÊ½
+	// å¯¹åº”ä¸¤ç§é‡è½½å½¢å¼
 	void setTempPosition() { xTemp = x; yTemp = y; }
-	Point getTempPosition() { return Point(xTemp, yTemp); }   //»ñµÃ½øÈëÕ½¶·Ê±µÄÎ»ÖÃ
+	Point getTempPosition() { return Point(xTemp, yTemp); }   //è·å¾—è¿›å…¥æˆ˜æ–—æ—¶çš„ä½ç½®
 
 	int getPrice() { return price; }
 	void setPlayer(int player) {
 		ofPlayer = player;
 	}
 
-	int getType() { return type; } // ·µ»ØµÄÊÇÃ¿ÖÖÓ¢ĞÛµÄÀàĞÍ£¬playerDataÖĞµÄenum£¬Ä¬ÈÏÃ¿ÖÖÓ¢ĞÛÒÑ¾­ÓĞÁË¸÷×ÔµÄtype
+	int getType() { return type; } // è¿”å›çš„æ˜¯æ¯ç§è‹±é›„çš„ç±»å‹ï¼ŒplayerDataä¸­çš„enumï¼Œé»˜è®¤æ¯ç§è‹±é›„å·²ç»æœ‰äº†å„è‡ªçš„type
 
-	/*******************************12.30Ìí¼Ó*************************/
+	/*******************************12.30æ·»åŠ *************************/
 	virtual void upLevel(Hero* hero) {};
 
-	/*ÓÃÓÚ×°±¸ĞŞ¸ÄÊôĞÔ*/
+	/*ç”¨äºè£…å¤‡ä¿®æ”¹å±æ€§*/
 	void changeAttackDistance(int value) { attackDistance += value; }
 	void changePro(int value) { protect += value; }
 	void changeSpeed(double value) { speed += value; }

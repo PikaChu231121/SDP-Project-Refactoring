@@ -1,3 +1,4 @@
+ï»¿// Refactored with Factory Method Pattern
 #pragma once
 #include "player/playerData.h"
 
@@ -7,7 +8,7 @@ class HeroCreator {
 public:
 	virtual Hero* createHero() = 0;
 	virtual ~HeroCreator() {}
-	// ºËÐÄÒµÎñÂß¼­
+	// Core Business Logic
 	static bool canPurchaseHero(int cost, const playerData& playerData);
 
 	static bool processHeroPurchase(playerData& playerData, int heroId, int cost);

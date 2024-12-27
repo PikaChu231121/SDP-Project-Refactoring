@@ -1,3 +1,4 @@
+﻿// Refactored with Factory Method Pattern
 #include "HeroCreator.h"  
 #include "hero.h"  
 #include "tfns.h"  

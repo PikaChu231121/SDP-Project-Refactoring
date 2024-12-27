@@ -1,3 +1,4 @@
+ï»¿// Refactored with Factory Method Pattern
 #include "hero.h"
 #include "tfns.h"
 #include "mlps.h"
@@ -13,12 +14,12 @@ bool Hero::connection(const playerData& myPlayerData)
     for (size_t i = 0; i < myPlayerData.battleArray->num; i++)
     {
         Hero* tmp = static_cast<Hero*>(myPlayerData.battleArray->arr[i]);
-        if (tmp->name == "Ìì·£åóÉñ") 
+        if (tmp->name == "å¤©ç½šå¼©ç¥") 
         {
             for (size_t j = 0; j < myPlayerData.battleArray->num; j++) 
             {
                 Hero* tmp2 = static_cast<Hero*>(myPlayerData.battleArray->arr[j]);
-                if (tmp2->name == "Î´À´ÊØ»¤Õß") 
+                if (tmp2->name == "æœªæ¥å®ˆæŠ¤è€…") 
                 {
                     Sprite* connect1 = Sprite::create("./hero/connect.png");
                     Sprite* connect2 = Sprite::create("./hero/connect.png");
@@ -46,15 +47,15 @@ Node* Hero::createHealthBar(double percentage)
     string backgroundTexture = "./hero/backgroundTexture.png";
     string foregroundTexture = "./hero/foregroundTexture.png";
     CCLOG("blood=%f", ((double)blood / (double)maxBlood) * 100);
-    // ´´½¨ÑªÌõµ×²¿±³¾°¾«Áé
+    // åˆ›å»ºè¡€æ¡åº•éƒ¨èƒŒæ™¯ç²¾çµ
     Sprite* backgroundSprite = Sprite::create(backgroundTexture);
     backgroundSprite->setScale(0.25f);
 
-    // ´´½¨ÑªÌõÇ°¾°¾«Áé
+    // åˆ›å»ºè¡€æ¡å‰æ™¯ç²¾çµ
     /*Sprite* foregroundSprite = Sprite::create(foregroundTexture);
     foregroundSprite->setScale(0.25f);*/
 
-    // ´´½¨ÑªÌõµÄ ProgressTimer
+    // åˆ›å»ºè¡€æ¡çš„ ProgressTimer
     healthBar = ProgressTimer::create(Sprite::create(foregroundTexture));
     healthBar->setScale(0.25f);
     healthBar->setType(ProgressTimer::Type::BAR);
@@ -62,11 +63,11 @@ Node* Hero::createHealthBar(double percentage)
     healthBar->setBarChangeRate(Point(1, 0));
     healthBar->setPercentage(percentage);
 
-    // ÉèÖÃÑªÌõµ×²¿±³¾°¾«ÁéºÍ ProgressTimer µÄÎ»ÖÃ
+    // è®¾ç½®è¡€æ¡åº•éƒ¨èƒŒæ™¯ç²¾çµå’Œ ProgressTimer çš„ä½ç½®
     backgroundSprite->setPosition(Point(400, 500));
     healthBar->setPosition(Point(400,500));
 
-    // ´´½¨ÈİÆ÷½Úµã£¬½«ÑªÌõµ×²¿±³¾°¾«ÁéºÍ ProgressTimer Ìí¼Óµ½ÈİÆ÷ÖĞ
+    // åˆ›å»ºå®¹å™¨èŠ‚ç‚¹ï¼Œå°†è¡€æ¡åº•éƒ¨èƒŒæ™¯ç²¾çµå’Œ ProgressTimer æ·»åŠ åˆ°å®¹å™¨ä¸­
     Node* containerNode = Node::create();
     containerNode->addChild(backgroundSprite);
     containerNode->addChild(healthBar);
@@ -93,9 +94,9 @@ void Hero::heroAnimation(string picturename, const int picturenum, Sprite* sprit
         sprintf(key, picname, i);
         animation->addSpriteFrameWithFile(key);
     }
-    animation->setDelayPerUnit(speed); //Éè¶¨ËÙ¶È
+    animation->setDelayPerUnit(speed); //è®¾å®šé€Ÿåº¦
     animation->setRestoreOriginalFrame(true);
-    animation->setLoops(loop); //loop=-1,Ñ­»·
+    animation->setLoops(loop); //loop=-1,å¾ªç¯
     auto action = Animate::create(animation);
     //action->setTag(-2);
     //sp->runAction(animate);
@@ -123,7 +124,7 @@ Hero* Hero::getEnemyByDistance(Hero* myHero, bool mode, bool isMyHero)
             (tempEnemyPosition.y - myPosition.y) * (tempEnemyPosition.y - myPosition.y));
         if (mode)
         {
-            // ×îÔ¶µÄµĞÈË
+            // æœ€è¿œçš„æ•Œäºº
             if (tempDistance > opDistance && tempDistance > 0 && !((static_cast<Hero*>(tempEnemy))->isDead()))
             {
                 opDistance = tempDistance;
@@ -133,7 +134,7 @@ Hero* Hero::getEnemyByDistance(Hero* myHero, bool mode, bool isMyHero)
         }
         else
         {
-            // ×î½üµÄµĞÈË
+            // æœ€è¿‘çš„æ•Œäºº
             if (tempDistance < opDistance && tempDistance > 0 && !((static_cast<Hero*>(tempEnemy))->isDead()))
             {
                 opDistance = tempDistance;
@@ -149,27 +150,27 @@ Hero* Hero::getEnemyByDistance(Hero* myHero, bool mode, bool isMyHero)
 void Hero::update(Hero* my, Hero* enemy, float dt)
 {
     Vec2 currentPosition = my->getPosition();
-    Vec2 targetPosition = enemy->getPosition(); // »ñÈ¡Ä¿±êÎ»ÖÃ
-    // ÉèÖÃ×îĞ¡µÄ·ÖÀë¾àÀë
+    Vec2 targetPosition = enemy->getPosition(); // è·å–ç›®æ ‡ä½ç½®
+    // è®¾ç½®æœ€å°çš„åˆ†ç¦»è·ç¦»
     float separationDistance = 100.0f;
-    // ÉèÖÃÒÆ¶¯ËÙ¶È
-     // ¼ÆËãÒÆ¶¯·½ÏòÏòÁ¿
+    // è®¾ç½®ç§»åŠ¨é€Ÿåº¦
+     // è®¡ç®—ç§»åŠ¨æ–¹å‘å‘é‡
     Vec2 direction = targetPosition - currentPosition;
     direction.normalize();
     float movespeed = 100.0f;
-    // ¼ÆËãÁ½¸ö½ÇÉ«Ö®¼äµÄ¾àÀë
+    // è®¡ç®—ä¸¤ä¸ªè§’è‰²ä¹‹é—´çš„è·ç¦»
     float distance = currentPosition.distance(targetPosition);
     if (distance < separationDistance)
     {
-        // ¼ÆËã·ÖÀëÏòÁ¿
+        // è®¡ç®—åˆ†ç¦»å‘é‡
         Vec2 separationVector = currentPosition - targetPosition;
         separationVector.normalize();
 
-        // ¸ù¾İ·ÖÀëÏòÁ¿µ÷ÕûÒÆ¶¯·½Ïò
+        // æ ¹æ®åˆ†ç¦»å‘é‡è°ƒæ•´ç§»åŠ¨æ–¹å‘
         direction += separationVector;
         direction.normalize();
     }
-    // ¸ù¾İ·½ÏòÏòÁ¿ÒÆ¶¯Ó¢ĞÛ
+    // æ ¹æ®æ–¹å‘å‘é‡ç§»åŠ¨è‹±é›„
     Vec2 newPosition = currentPosition + direction * movespeed * dt;
     my->setPosition(newPosition);
 }
@@ -197,25 +198,25 @@ bool Hero::isInAttackRange(Hero* myHero, Hero* enemyHero)
 
 void Dizzy(Hero* enemy)
 {
-    //Ó¢ĞÛ±ä³É»ÒÉ«
+    //è‹±é›„å˜æˆç°è‰²
     enemy->setColor(Color3B::GRAY);
-    // ´´½¨¾«Áé
+    // åˆ›å»ºç²¾çµ
     Sprite* dizzy = Sprite::create("./hero/dizzy.png");
     enemy->addChild(dizzy);
     dizzy->setPosition(Vec2(500, 400));
 
-    // ÉèÖÃÏûÊ§¶¯×÷
+    // è®¾ç½®æ¶ˆå¤±åŠ¨ä½œ
     auto removeSprite = CallFunc::create([dizzy]() {
         dizzy->removeFromParentAndCleanup(true);
         });
     Sequence* sequence = Sequence::create(DelayTime::create(3.f), removeSprite, nullptr);
     dizzy->runAction(sequence);
-    //½ûÓÃÓ¢ĞÛµÄ¶¯×÷
+    //ç¦ç”¨è‹±é›„çš„åŠ¨ä½œ
     enemy->stopAllActions();
     auto lambda = [=](float dt) {
-        // ÔÚÕâÀïÌí¼Ó»Ö¸´Õı³£×´Ì¬µÄ²Ù×÷£¬½«Ó¢ĞÛµÄÑÕÉ«»Ö¸´ÎªÔ­Ê¼ÑÕÉ«
+        // åœ¨è¿™é‡Œæ·»åŠ æ¢å¤æ­£å¸¸çŠ¶æ€çš„æ“ä½œï¼Œå°†è‹±é›„çš„é¢œè‰²æ¢å¤ä¸ºåŸå§‹é¢œè‰²
         enemy->setColor(Color3B::WHITE);
-        // ÖØĞÂÆôÓÃÓ¢ĞÛµÄ¶¯×÷
+        // é‡æ–°å¯ç”¨è‹±é›„çš„åŠ¨ä½œ
         enemy->heroAnimation(enemy->picturename, enemy->picturenum, enemy, enemy->speed, -1);
     };
     enemy->scheduleOnce(lambda, 3, "dizzyKey");
@@ -223,15 +224,15 @@ void Dizzy(Hero* enemy)
 
 void sevInjure(Hero* enemy)
 {
-    //Ó¢ĞÛ±ä³ÉºìÉ«
+    //è‹±é›„å˜æˆçº¢è‰²
     enemy->setColor(Color3B::RED);
-    // ½ûÓÃÓ¢ĞÛ
+    // ç¦ç”¨è‹±é›„
     enemy->movespeed = enemy->movespeed * 0.5;
     enemy->speed = enemy->speed * 0.5;
     auto lambda = [=](float dt) {
-        // ÔÚÕâÀïÌí¼Ó»Ö¸´Õı³£×´Ì¬µÄ²Ù×÷£¬½«Ó¢ĞÛµÄÑÕÉ«»Ö¸´ÎªÔ­Ê¼ÑÕÉ«
+        // åœ¨è¿™é‡Œæ·»åŠ æ¢å¤æ­£å¸¸çŠ¶æ€çš„æ“ä½œï¼Œå°†è‹±é›„çš„é¢œè‰²æ¢å¤ä¸ºåŸå§‹é¢œè‰²
         enemy->setColor(Color3B::WHITE);
-        // ÖØĞÂÆôÓÃÓ¢ĞÛ
+        // é‡æ–°å¯ç”¨è‹±é›„
         enemy->movespeed = enemy->movespeed * 2;
         enemy->speed = enemy->speed * 2;
     };
@@ -249,7 +250,7 @@ void relProtect(Hero* enemy)
     enemy->setColor(Color3B::GREEN);
     enemy->protect = (int)(enemy->protect * 0.8);
     auto lambda = [=](float dt) {
-        // ÔÚÕâÀïÌí¼Ó»Ö¸´Õı³£×´Ì¬µÄ²Ù×÷£¬½«Ó¢ĞÛµÄÑÕÉ«»Ö¸´ÎªÔ­Ê¼ÑÕÉ«
+        // åœ¨è¿™é‡Œæ·»åŠ æ¢å¤æ­£å¸¸çŠ¶æ€çš„æ“ä½œï¼Œå°†è‹±é›„çš„é¢œè‰²æ¢å¤ä¸ºåŸå§‹é¢œè‰²
         enemy->setColor(Color3B::WHITE);
         enemy->protect = (int)(enemy->protect * 1.25);
     };
@@ -269,12 +270,12 @@ void immune(Hero* enemy)
 
 void bomb(Hero* enemy, int attack)
 {
-    // ´´½¨¾«Áé
+    // åˆ›å»ºç²¾çµ
     Sprite* bomb = Sprite::create("./hero/bomb.png");
     enemy->addChild(bomb);
     bomb->setPosition(Vec2(500, 400));
 
-    // ÉèÖÃÏûÊ§¶¯×÷
+    // è®¾ç½®æ¶ˆå¤±åŠ¨ä½œ
     auto removeSprite = CallFunc::create([bomb]() {
         bomb->removeFromParentAndCleanup(true);
         });
@@ -288,19 +289,19 @@ void bomb(Hero* enemy, int attack)
 
 void lightning(Hero* enemy, const int hurt)
 {
-    // ´´½¨¾«Áé
+    // åˆ›å»ºç²¾çµ
     Sprite* light = Sprite::create("./hero/lightning.png");
     enemy->addChild(light);
     light->setPosition(Vec2(500, 400));
 
-    // ÉèÖÃÏûÊ§¶¯×÷
+    // è®¾ç½®æ¶ˆå¤±åŠ¨ä½œ
     auto removeSprite = CallFunc::create([light]() {
         light->removeFromParentAndCleanup(true);
         });
     Sequence* sequence = Sequence::create(DelayTime::create(1.f), removeSprite, nullptr);
     light->runAction(sequence);
     enemy->setColor(Color3B::GRAY);
-    enemy->blood -= hurt * 0.9;//Ôì³É¶îÍâ90%µÄÉËº¦
+    enemy->blood -= hurt * 0.9;//é€ æˆé¢å¤–90%çš„ä¼¤å®³
 }
 void Hero::recover()
 {

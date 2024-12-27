@@ -1,3 +1,4 @@
+ï»¿// Refactored with Factory Method Pattern
 #include "game/layerHero.h"
 
 layerHero* layerHero::createLayerHero()
@@ -66,7 +67,7 @@ void layerHero::heroUpgrade(playerData& pData)
 			ccArray* sourceArrays[3] = {};
 			int upgradeCount = 0;
 
-			// ÊÕ¼¯´ıÉı¼¶µÄÓ¢ĞÛ  
+			// æ”¶é›†å¾…å‡çº§çš„è‹±é›„  
 			collectUpgradeableHeroes(pData, i, heroesToUpgrade, sourceArrays, upgradeCount);
 
 			if (canUpgradeHeroes(heroesToUpgrade, upgradeCount, i))
@@ -84,7 +85,7 @@ void layerHero::heroUpgrade(playerData& pData)
 	}
 }
 
-/*PC_PlayerÏà¹Ø*/
+/*PC_Playerç›¸å…³*/
 void layerHero::aiShowWaitingArray()
 {
 	for (int i = 0; i < opPlayerData.waitingArray->num; i++)
@@ -95,10 +96,10 @@ void layerHero::aiShowWaitingArray()
 }
 void layerHero::aiShowBattleArray()
 {
-	/*Î»ÖÃ³õÊ¼»¯*/
+	/*ä½ç½®åˆå§‹åŒ–*/
 	for (int i = 0; i < opPlayerData.battleArray->num; i++)
 	{
-		if (i >= 0 && i <= 7) // Ã¿ĞĞ°Ë¸ö
+		if (i >= 0 && i <= 7) // æ¯è¡Œå…«ä¸ª
 		{
 			static_cast<Hero*>(opPlayerData.battleArray->arr[i])->setPosition(chessMap[6][i].x, chessMap[6][i].y);
 			static_cast<Hero*>(opPlayerData.battleArray->arr[i])->set(chessMap[6][i].x, chessMap[6][i].y);
@@ -129,7 +130,7 @@ void layerHero::aiShowBattleArray()
 				this->addChild(static_cast<Hero*>(opPlayerData.battleArray->arr[i - 16]));
 			}
 		}
-		// Ö»ÓĞ×î¶àÈıĞĞ
+		// åªæœ‰æœ€å¤šä¸‰è¡Œ
 	}
 
 }
@@ -147,10 +148,10 @@ float layerHero::calDistance(Point p1, Point p2)
 
 void layerHero::collectUpgradeableHeroes(playerData& pData, int heroType, Hero* temp[3], ccArray* tempArray[3], int& count)
 {
-	// ´ÓµÈ´ıÇøÓòÊÕ¼¯  
+	// ä»ç­‰å¾…åŒºåŸŸæ”¶é›†  
 	collectFromArray(pData.waitingArray, heroType, temp, tempArray, count);
 
-	// Èç¹û»¹ĞèÒª,´ÓÕ½¶·ÇøÓòÊÕ¼¯  
+	// å¦‚æœè¿˜éœ€è¦,ä»æˆ˜æ–—åŒºåŸŸæ”¶é›†  
 	if (count < 3) {
 		collectFromArray(pData.battleArray, heroType, temp, tempArray, count);
 	}
@@ -194,5 +195,3 @@ void layerHero::handleUpgradeProcess(playerData& pData, Hero* temp[3], ccArray* 
 	ccArrayAppendObject(pData.waitingArray, upgrade_chess);
 	pData.playerHaveNewHero = 1;
 }
-
-

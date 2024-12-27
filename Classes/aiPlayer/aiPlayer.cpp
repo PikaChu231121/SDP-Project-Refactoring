@@ -1,3 +1,4 @@
+ï»¿// Refactored with Factory Method Pattern
 #include "./aiPlayer/aiPlayer.h"
 
 Hero* aiPlayer::soldHero()
@@ -14,17 +15,17 @@ Hero* aiPlayer::soldHero()
 
 void aiPlayer::judgeGold()
 {
-	refresh();	// Ë¢ĞÂÉÌµê
+	refresh();	// åˆ·æ–°å•†åº—
 	opPlayerData.playerMoney += 2;
 	checkUpgrade();
-	judgeExp();	// Âò¾­Ñé
-	if (checkLimit() && checkHighGoldHero() && opPlayerData.playerMoney >= 2) // ²»³¬¹ıÈËÊıÏŞÖÆÇÒ¹ºÂòÁË¸ß·ÑÓ¢ĞÛ
-		refresh(); // Ë¢ĞÂÉÌµê
+	judgeExp();	// ä¹°ç»éªŒ
+	if (checkLimit() && checkHighGoldHero() && opPlayerData.playerMoney >= 2) // ä¸è¶…è¿‡äººæ•°é™åˆ¶ä¸”è´­ä¹°äº†é«˜è´¹è‹±é›„
+		refresh(); // åˆ·æ–°å•†åº—
 }
 
 bool aiPlayer::checkUpgrade()
 {
-	// Ê¹ÓÃ HeroCreator µÄ canPurchaseHero º¯Êı¼ì²éÊÇ·ñ¿ÉÒÔ¹ºÂòÓ¢ĞÛ
+	// ä½¿ç”¨ HeroCreator çš„ canPurchaseHero å‡½æ•°æ£€æŸ¥æ˜¯å¦å¯ä»¥è´­ä¹°è‹±é›„
 	if (!HeroCreator::canPurchaseHero(0, opPlayerData)) {
 		return false;
 	}

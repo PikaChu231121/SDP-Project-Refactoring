@@ -1,3 +1,4 @@
+ï»¿// Refactored with Factory Method Pattern
 #ifndef _LAYERS_HERO_H_
 #define _LAYERS_HERO_H_
 
@@ -18,7 +19,7 @@ public:
 	virtual bool init();
 	void update(float dt);
 
-	/****aiÏà¹Ø****/
+	/****aiç›¸å…³****/
 	void aiShowWaitingArray();
 	void aiShowBattleArray();
 

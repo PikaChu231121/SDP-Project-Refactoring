@@ -1,3 +1,4 @@
+﻿// Refactored with Factory Method Pattern
 #ifndef _LAYERS_SHOP_H_
 #define _LAYERS_SHOP_H_
 
