@@ -12,7 +12,7 @@
    git clone https://github.com/PikaChu231121/SDP-Project-Refactoring.git
    ```
 
-2. 在项目根目录下创建一个`build-win32`文件夹，在该目录下打开`cmd`并输入以下命令进行编译：
+2. 在项目根目录下创建一个`win32-build`文件夹，在该目录下打开`cmd`并输入以下命令进行编译：
 
    ```cmd
    cmake .. -G"Visual Studio 17 2022" -A win32
