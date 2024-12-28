@@ -1,3 +1,4 @@
+// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "HelloWorldScene.h"
 #include "mainMenu/mainMenu.h"
 #include "globalResSetting.h"
@@ -11,6 +12,7 @@
 #include "hero/snzx.h"
 #include <vector>
 #include "inGameTimer/inGameTimer.h"
+#include "ResourceManager.h"
 
 using std::vector;
 
@@ -39,8 +41,8 @@ bool sceneTest::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     /*----------------MenuItemSprite aboutBack---------------------*/
-    Sprite* aboutBackNormal = Sprite::create("./mainMenu/backToMenuNormal.png");
-    Sprite* aboutBackSelected = Sprite::create("./mainMenu/backToMenuSelected.png");
+    Sprite* aboutBackNormal = ResourceManager::CreateNewSprite("./mainMenu/backToMenuNormal.png");
+    Sprite* aboutBackSelected = ResourceManager::CreateNewSprite("./mainMenu/backToMenuSelected.png");
 
     MenuItemSprite* aboutBack = MenuItemSprite::create(aboutBackNormal, aboutBackSelected,
         CC_CALLBACK_1(sceneTest::aboutBack, this));
@@ -63,7 +65,7 @@ bool sceneTest::init()
     this->addChild(menuAboutBack, 1);
 
     /*------------------background setting-------------------*/
-    auto sprite1 = Sprite::create("./mainMenu/aboutBG.jpg");
+    auto sprite1 = ResourceManager::CreateNewSprite("./mainMenu/aboutBG.jpg");
 
     sprite1->setPosition(800, 460);
     this->addChild(sprite1);

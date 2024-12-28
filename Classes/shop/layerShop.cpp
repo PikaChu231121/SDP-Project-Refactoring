@@ -1,5 +1,7 @@
 ﻿// Refactored with Factory Method Pattern
+// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "layerShop.h"
+#include "ResourceManager.h"
 
 layerShop::layerShop() {
 	shop();
@@ -90,7 +92,7 @@ void layerShop::heroShop(int i)
 }
 
 void layerShop::cover(float x, float y) {
-	auto cover = Sprite::create("./shop/cover.png");
+	auto cover = ResourceManager::CreateNewSprite("./shop/cover.png");
 	subLayer->addChild(cover, 3);
 	cover->setPosition(x, y);
 }
@@ -123,7 +125,7 @@ void layerShop::shop() {
 	this->addChild(subLayer, 2);
 
 	/*-------------------set background----------------------*/
-	auto sprite = Sprite::create("./shop/backgroundofshop.png");
+	auto sprite = ResourceManager::CreateNewSprite("./shop/backgroundofshop.png");
 	sprite->setPosition(80, 250);
 	subLayer->addChild(sprite);
 

@@ -1,6 +1,8 @@
+// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "sceneLoading.h"
 #include "mainMenu/mainMenu.h"
 #include "globalResSetting.h"
+#include "ResourceManager.h"
 
 sceneLoading* sceneLoading::createScene()
 {
@@ -21,7 +23,7 @@ bool sceneLoading::init()
 	loadedResources = 0;
 
 	/**************MenuBackground**************/
-	Sprite* bg = Sprite::create("sceneLoading.png");
+	Sprite* bg = ResourceManager::CreateNewSprite("sceneLoading.png");
 	if (bg == nullptr)
 	{
 		problemLoading("sceneLoading.png");
@@ -33,7 +35,7 @@ bool sceneLoading::init()
 		this->addChild(bg, 0);
 	}
 
-	loadingBar = ProgressTimer::create(Sprite::create("loadingBar.png"));
+	loadingBar = ProgressTimer::create(ResourceManager::CreateNewSprite("loadingBar.png"));
 	loadingBar->setScaleX(2.0);
 	loadingBar->setType(ProgressTimer::Type::BAR);
 	loadingBar->setMidpoint(Vec2(0, 0));
@@ -50,25 +52,34 @@ bool sceneLoading::init()
 
 void sceneLoading::loadResources()
 {
-	Director::getInstance()->getTextureCache()->addImageAsync("./mainMenu/mainMenuBackground.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./mainMenu/aboutBG.jpg", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./gameScene/gameBackground.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./player/avatar1.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./player/avatar2.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
+	auto callback = CC_CALLBACK_1(sceneLoading::loadingCallBack, this);
 
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/bqzs.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/ltzz.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/mlps.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/qxsq.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/snzx.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/tfns.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/wlshz.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/yn.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
+	// 使用资源管理器加载资源
+	ResourceManager::getTexture("./mainMenu/mainMenuBackground.png");
+	ResourceManager::getTexture("./mainMenu/aboutBG.jpg");
+	ResourceManager::getTexture("./gameScene/gameBackground.png");
+	ResourceManager::getTexture("./player/avatar1.png");
+	ResourceManager::getTexture("./player/avatar2.png");
 
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/bomb.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/lightning.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
-	Director::getInstance()->getTextureCache()->addImageAsync("./hero/dizzy.png", CC_CALLBACK_1(sceneLoading::loadingCallBack, this));
+	ResourceManager::getTexture("./hero/bqzs.png");
+	ResourceManager::getTexture("./hero/ltzz.png");
+	ResourceManager::getTexture("./hero/mlps.png");
+	ResourceManager::getTexture("./hero/qxsq.png");
+	ResourceManager::getTexture("./hero/snzx.png");
+	ResourceManager::getTexture("./hero/tfns.png");
+	ResourceManager::getTexture("./hero/wlshz.png");
+	ResourceManager::getTexture("./hero/yn.png");
+
+	ResourceManager::getTexture("./hero/bomb.png");
+	ResourceManager::getTexture("./hero/lightning.png");
+	ResourceManager::getTexture("./hero/dizzy.png");
+
+	// 模拟异步回调
+	Director::getInstance()->getScheduler()->schedule([this](float) {
+		loadingCallBack(nullptr); // 更新进度条
+		}, this, 0, totalResources, 0, false, "loading_scheduler");
 }
+
 
 void sceneLoading::loadingCallBack(Texture2D* texture)
 {

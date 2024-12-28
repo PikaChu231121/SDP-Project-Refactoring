@@ -1,28 +1,29 @@
+// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "yn.h"
-
+#include "ResourceManager.h"
 
 ynyn::ynyn()
 {
-    name = "ÒþÄï", skillname = "Ó°¶ÝÈÌÊõ", advice = "ÖÐÅÅ";
+    name = "ï¿½ï¿½ï¿½ï¿½", skillname = "Ó°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", advice = "ï¿½ï¿½ï¿½ï¿½";
     skillType = PHYSICS;
-    blood = 550;//µ±Ç°ÑªÁ¿
-    maxBlood = 550;//ÉúÃüÖµ
-    level = 1; //µÈ¼¶
-    attack = 70; //¹¥»÷Á¦
-    protect = 20;//»¤¼×
-    magicPro = 20;//Ä§¿¹
-    state = ATTACK;//¼¼ÄÜ×´Ì¬
-    attackDistance = 1;//¹¥»÷¾àÀë
-    price = 3;//»¨·Ñ
-    speed = 0.6;//¹¥ËÙ
+    blood = 550;//ï¿½ï¿½Ç°Ñªï¿½ï¿½
+    maxBlood = 550;//ï¿½ï¿½ï¿½ï¿½Öµ
+    level = 1; //ï¿½È¼ï¿½
+    attack = 70; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    protect = 20;//ï¿½ï¿½ï¿½ï¿½
+    magicPro = 20;//Ä§ï¿½ï¿½
+    state = ATTACK;//ï¿½ï¿½ï¿½ï¿½×´Ì¬
+    attackDistance = 1;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    price = 3;//ï¿½ï¿½ï¿½ï¿½
+    speed = 0.6;//ï¿½ï¿½ï¿½ï¿½
 }
 
 void ynyn::upLevel(Hero* yn1)
 {
-    yn1->blood = 990;//µ±Ç°ÑªÁ¿
-    yn1->maxBlood = 990;//ÉúÃüÖµ
-    yn1->level = 2; //µÈ¼¶
-    yn1->attack = 126; //¹¥»÷Á¦
+    yn1->blood = 990;//ï¿½ï¿½Ç°Ñªï¿½ï¿½
+    yn1->maxBlood = 990;//ï¿½ï¿½ï¿½ï¿½Öµ
+    yn1->level = 2; //ï¿½È¼ï¿½
+    yn1->attack = 126; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     setScale(0.35f);
 }
 
@@ -44,14 +45,14 @@ void ynyn::Play()
     static Hero* enemy;
     static int attackNum = 0;
     auto lambdd = [=](float dt) {
-        enemy = getEnemyByDistance(this, false, this->ofPlayer);//ËøµÐ
+        enemy = getEnemyByDistance(this, false, this->ofPlayer);//ï¿½ï¿½ï¿½ï¿½
         if (enemy != nullptr)
             this->update(this, enemy, dt);
         this->healthBar->setPercentage(((double)blood / (double)maxBlood) * 100);
         isDead();
     };
     this->schedule(lambdd, 1 / 60.f, "ynynMove");
-    attackNum = 0;//¹¥»÷´ÎÊý
+    attackNum = 0;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     static double add = (level == 1) ? 300 : 400;
     static double exp = (level == 1) ? 3 : 4;
     if (enemy != nullptr)
@@ -61,25 +62,25 @@ void ynyn::Play()
             if (enemy != nullptr && state == ATTACK)
             {
                 ynyn::ynynNormalAttack(enemy, attackNum, add, hurt);
-                attackNum++;//¶Ô¸ÃµÐÈËµÄ¹¥»÷´ÎÊý+1
+                attackNum++;//ï¿½Ô¸Ãµï¿½ï¿½ËµÄ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½+1
             }
         };
         this->schedule(lambda, 1 / speed, "ynAttack");
-        // ÊÍ·Å¼¼ÄÜ
+        // ï¿½Í·Å¼ï¿½ï¿½ï¿½
         if (blue == blueMax) {
             auto lambdc = [=](float dt) {
                 ynyn::swordwaive(this);//??????????//picture
                 if (enemy != nullptr)
                 {
                     if (enemy->blood > (int)(0.5 * enemy->maxBlood)) {
-                        enemy->blood -= (int)(hurt - (enemy->protect) + add);//¸ßÑªÁ¿¼Ó³ÉÉËº¦
+                        enemy->blood -= (int)(hurt - (enemy->protect) + add);//ï¿½ï¿½Ñªï¿½ï¿½ï¿½Ó³ï¿½ï¿½Ëºï¿½
                     }
                     else {
-                        enemy->blood -= (int)(hurt - (enemy->protect) + add * exp);//µÍÑªÁ¿¼Ó±¶ÉËº¦
+                        enemy->blood -= (int)(hurt - (enemy->protect) + add * exp);//ï¿½ï¿½Ñªï¿½ï¿½ï¿½Ó±ï¿½ï¿½Ëºï¿½
                     }
                 }
             };
-            this->schedule(lambdc, 1 / speed, "ynNormalAttack");//ÊÍ·Å¼¼ÄÜ
+            this->schedule(lambdc, 1 / speed, "ynNormalAttack");//ï¿½Í·Å¼ï¿½ï¿½ï¿½
             blue = 0;
         }
     }
@@ -88,38 +89,38 @@ void ynyn::Play()
 void ynyn::ynynNormalAttack(Hero* enemy, const int attackNum,const double add,const int hurt)
 {
     blue += 30;
-    enemy->protect > hurt ? enemy->blood -= 0 : enemy->blood -= hurt - enemy->protect;//»¤¼×µÖÏû²¿·ÖÉËº¦
+    enemy->protect > hurt ? enemy->blood -= 0 : enemy->blood -= hurt - enemy->protect;//ï¿½ï¿½ï¿½×µï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëºï¿½
     if (enemy->blood < 0)
-        enemy->blood = 0;//µÐ·½ÒÑËÀ
+        enemy->blood = 0;//ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½
     goaway(enemy->getPosition(), this);
 }
 
 void ynyn::swordwaive(Hero* my)
 {
-    Sprite* sword = Sprite::create("./hero/sword.png");
+    Sprite* sword = ResourceManager::CreateNewSprite("./hero/sword.png");
     my->addChild(sword, 3);
     sword->setScale(2.0f);
     sword->setPosition(Vec2(600, 300));
-    // »ÓÎèµ¶µÄ¶¯×÷ÐòÁÐ
+    // ï¿½ï¿½ï¿½èµ¶ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     auto waive = Sequence::create(
-        RotateTo::create(1.0f, 90),   // µ¶Ïò×óÐý×ª
-        RotateTo::create(1.0f, 0),      // µ¶»Ö¸´Ô­Ê¼½Ç¶È
+        RotateTo::create(1.0f, 90),   // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ª
+        RotateTo::create(1.0f, 0),      // ï¿½ï¿½ï¿½Ö¸ï¿½Ô­Ê¼ï¿½Ç¶ï¿½
         CallFunc::create([sword]() {
             sword->removeFromParent();
             }),
         nullptr
                 );
-    // Ö´ÐÐ¶¯×÷ÐòÁÐ
+    // Ö´ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     sword->runAction(waive);
 }
 
 void ynyn::goaway(Point Pos, Hero* my) {
-    // ÅÜµ½Ô¶´¦µÄ¶¯×÷ÐòÁÐ
-    double distance = 50; // ¸ü¸Ä¾àÀëµÄÖµ
+    // ï¿½Üµï¿½Ô¶ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    double distance = 50; // ï¿½ï¿½ï¿½Ä¾ï¿½ï¿½ï¿½ï¿½Öµ
     auto run = Sequence::create(
-        MoveTo::create(1.0f, Vec2(Pos.x + distance, Pos.y)), // ÐÞ¸ÄÒÆ¶¯Ä¿±êµÄÎ»ÖÃ
+        MoveTo::create(1.0f, Vec2(Pos.x + distance, Pos.y)), // ï¿½Þ¸ï¿½ï¿½Æ¶ï¿½Ä¿ï¿½ï¿½ï¿½Î»ï¿½ï¿½
         nullptr
     );
-    // Ö´ÐÐ¶¯×÷ÐòÁÐ
+    // Ö´ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     my->runAction(run);
 }

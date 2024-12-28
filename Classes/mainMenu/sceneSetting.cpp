@@ -1,7 +1,9 @@
+// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "sceneSetting.h"
 #include "globalResSetting.h"
 #include "mainMenu.h"
 #include "AudioEngine.h"
+#include "ResourceManager.h"
 
 USING_NS_CC;
 
@@ -21,8 +23,8 @@ bool sceneSettings::init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     /*----------------MenuItemSprite settingsBack---------------------*/
-    Sprite* settingsBackNormal = Sprite::create("./mainMenu/backToMenuNormal.png");
-    Sprite* settingsBackSelected = Sprite::create("./mainMenu/backToMenuSelected.png");
+    Sprite* settingsBackNormal = ResourceManager::CreateNewSprite("./mainMenu/backToMenuNormal.png");
+    Sprite* settingsBackSelected = ResourceManager::CreateNewSprite("./mainMenu/backToMenuSelected.png");
 
     MenuItemSprite* settingsBack = MenuItemSprite::create(settingsBackNormal, settingsBackSelected,
         CC_CALLBACK_1(sceneSettings::settingsBack, this));
@@ -60,17 +62,17 @@ bool sceneSettings::init()
     }
 
     /*------------------background setting-------------------*/
-    auto sprite1 = Sprite::create("./mainMenu/aboutBG.jpg");
+    auto sprite1 = ResourceManager::CreateNewSprite("./mainMenu/aboutBG.jpg");
 
     sprite1->setPosition(800, 460);
     this->addChild(sprite1);
 
     /*----------------MenuItemSprite switchSound---------------------*/
     auto* labelSound = Label::createWithTTF("Sound", "./fonts/Marker Felt.ttf", 60);
-    Sprite* soundOffNormal = Sprite::create("./mainMenu/soundOffNormal.png");
-    Sprite* soundOffSelected = Sprite::create("./mainMenu/soundOffSelected.png");
-    Sprite* soundOnNormal = Sprite::create("./mainMenu/soundOnNormal.png");
-    Sprite* soundOnSelected = Sprite::create("./mainMenu/soundOnSelected.png");
+    Sprite* soundOffNormal = ResourceManager::CreateNewSprite("./mainMenu/soundOffNormal.png");
+    Sprite* soundOffSelected = ResourceManager::CreateNewSprite("./mainMenu/soundOffSelected.png");
+    Sprite* soundOnNormal = ResourceManager::CreateNewSprite("./mainMenu/soundOnNormal.png");
+    Sprite* soundOnSelected = ResourceManager::CreateNewSprite("./mainMenu/soundOnSelected.png");
 
     MenuItemSprite* soundOff = MenuItemSprite::create(soundOffNormal, soundOffSelected,
         		            CC_CALLBACK_1(sceneSettings::soundOff, this));

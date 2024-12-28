@@ -1,3 +1,4 @@
+// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "mainMenu.h"
 #include "HelloWorldScene.h"
 #include "globalResSetting.h"
@@ -56,7 +57,7 @@ bool mainMenu::init()
     /*----------------MenuBackground---------------------*/
 
     // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create(BG_PNG);
+    auto sprite = ResourceManager::CreateNewSprite(BG_PNG);
     if (sprite == nullptr)
     {
         problemLoading("'mainMenuBackground.png'");
@@ -135,7 +136,7 @@ bool mainMenu::init()
     MenuItemSprite* about = MenuItemSprite::create(aboutNormal, aboutSelected, 
         CC_CALLBACK_1(mainMenu::onAbout, this));
 
-    //¡°¹ØÓÚ¡±°´Å¥tagÎª21
+    //ï¿½ï¿½ï¿½ï¿½ï¿½Ú¡ï¿½ï¿½ï¿½Å¥tagÎª21
     about->setTag(21);
 
     if (about == nullptr ||
@@ -162,7 +163,7 @@ bool mainMenu::init()
     //MenuItemSprite* test = MenuItemSprite::create(about1Normal, about1Selected,
     //    CC_CALLBACK_1(mainMenu::onTest, this));
 
-    ////¡°¹ØÓÚ¡±°´Å¥tagÎª21
+    ////ï¿½ï¿½ï¿½ï¿½ï¿½Ú¡ï¿½ï¿½ï¿½Å¥tagÎª21
     //test->setTag(26);
 
     //if (test == nullptr ||

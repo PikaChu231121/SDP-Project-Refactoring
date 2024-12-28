@@ -1,4 +1,5 @@
 ﻿// Refactored with Factory Method Pattern
+// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "hero.h"
 #include "tfns.h"
 #include "mlps.h"
@@ -8,6 +9,7 @@
 #include "yn.h"
 #include "qxsq.h"
 #include "snzx.h"
+#include "ResourceManager.h"
 
 bool Hero::connection(const playerData& myPlayerData) 
 {
@@ -21,8 +23,8 @@ bool Hero::connection(const playerData& myPlayerData)
                 Hero* tmp2 = static_cast<Hero*>(myPlayerData.battleArray->arr[j]);
                 if (tmp2->name == "未来守护者") 
                 {
-                    Sprite* connect1 = Sprite::create("./hero/connect.png");
-                    Sprite* connect2 = Sprite::create("./hero/connect.png");
+                    Sprite* connect1 = ResourceManager::CreateNewSprite("./hero/connect.png");
+                    Sprite* connect2 = ResourceManager::CreateNewSprite("./hero/connect.png");
                     connect1->setScale(2.5f);
                     connect2->setScale(2.5f);
                     tmp->addChild(connect1);
@@ -48,15 +50,15 @@ Node* Hero::createHealthBar(double percentage)
     string foregroundTexture = "./hero/foregroundTexture.png";
     CCLOG("blood=%f", ((double)blood / (double)maxBlood) * 100);
     // 创建血条底部背景精灵
-    Sprite* backgroundSprite = Sprite::create(backgroundTexture);
+    Sprite* backgroundSprite = ResourceManager::CreateNewSprite(backgroundTexture);
     backgroundSprite->setScale(0.25f);
 
     // 创建血条前景精灵
-    /*Sprite* foregroundSprite = Sprite::create(foregroundTexture);
+    /*Sprite* foregroundSprite = ResourceManager::CreateNewSprite(foregroundTexture);
     foregroundSprite->setScale(0.25f);*/
 
     // 创建血条的 ProgressTimer
-    healthBar = ProgressTimer::create(Sprite::create(foregroundTexture));
+    healthBar = ProgressTimer::create(ResourceManager::CreateNewSprite(foregroundTexture));
     healthBar->setScale(0.25f);
     healthBar->setType(ProgressTimer::Type::BAR);
     healthBar->setMidpoint(Point(0, 1));
@@ -201,7 +203,7 @@ void Dizzy(Hero* enemy)
     //英雄变成灰色
     enemy->setColor(Color3B::GRAY);
     // 创建精灵
-    Sprite* dizzy = Sprite::create("./hero/dizzy.png");
+    Sprite* dizzy = ResourceManager::CreateNewSprite("./hero/dizzy.png");
     enemy->addChild(dizzy);
     dizzy->setPosition(Vec2(500, 400));
 
@@ -271,7 +273,7 @@ void immune(Hero* enemy)
 void bomb(Hero* enemy, int attack)
 {
     // 创建精灵
-    Sprite* bomb = Sprite::create("./hero/bomb.png");
+    Sprite* bomb = ResourceManager::CreateNewSprite("./hero/bomb.png");
     enemy->addChild(bomb);
     bomb->setPosition(Vec2(500, 400));
 
@@ -290,7 +292,7 @@ void bomb(Hero* enemy, int attack)
 void lightning(Hero* enemy, const int hurt)
 {
     // 创建精灵
-    Sprite* light = Sprite::create("./hero/lightning.png");
+    Sprite* light = ResourceManager::CreateNewSprite("./hero/lightning.png");
     enemy->addChild(light);
     light->setPosition(Vec2(500, 400));
 

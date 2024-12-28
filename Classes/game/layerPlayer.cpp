@@ -1,4 +1,6 @@
+// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "game/layerPlayer.h"
+#include "ResourceManager.h"
 
 const Point myBloodPos = Point(180, 610);
 const Point myExpPos = Point(180, 590);
@@ -11,7 +13,7 @@ layerPlayer* layerPlayer::createPlayer(string& name)
 	auto player = layerPlayer::create();
 
 	/**********myPlayer nickName and avatar************/
-	Sprite* myAvatar = Sprite::create("./player/avatar1.png");
+	Sprite* myAvatar = ResourceManager::CreateNewSprite("./player/avatar1.png");
 	myAvatar->setPosition(50, 600);
 	myAvatar->setScale(0.035f);
 	player->addChild(myAvatar);
@@ -21,7 +23,7 @@ layerPlayer* layerPlayer::createPlayer(string& name)
 	player->addChild(myName, 1);
 
 	/**********opPlayer nickName and avatar************/
-	Sprite* opAvatar = Sprite::create("./player/avatar2.png");
+	Sprite* opAvatar = ResourceManager::CreateNewSprite("./player/avatar2.png");
 	opAvatar->setPosition(50, 700);
 	player->addChild(opAvatar);
 
