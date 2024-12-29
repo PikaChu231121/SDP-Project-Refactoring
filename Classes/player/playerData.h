@@ -19,7 +19,6 @@ private:
 	int playerExp = 0;							//玩家经验值
 	int playerMoney = 10;						//玩家金钱
 	int expToLevelUp = 2;						//升级所需经验值
-	void calExp();								//计算经验值
 	bool playerHaveNewHero = false;				//玩家是否拥有新英雄
 
 	friend class sceneGame;
@@ -31,11 +30,18 @@ private:
 
 public:
 	int getPlayerMoney() const { return playerMoney; }	
+    void setPlayerMoney(int money) { playerMoney = money; }
 	void deductMoney(int amount) { playerMoney -= amount; }
-	//获取玩家金钱
+	int getPlayerExp() const { return playerExp; }
+	void setPlayerExp(int exp) { playerExp = exp; }
+	void addExp(int amount) { playerExp += amount; }
+	int getPlayerLevel() const { return playerLevel; }
+
+
 	void playerHurt(int damageBlood) { this->playerHealth -= damageBlood; }		//玩家受伤
 	void updateMoneyAndExp();													//更新金钱和经验值
 	void playerInit();															//玩家初始化
+	void calExp();								//计算经验值
 
 	/*********玩家英雄信息**********/
 	ccArray* waitingArray = ccArrayNew(100);	//玩家备战阵容

@@ -1,7 +1,7 @@
 #include "sceneGame.h"
 USING_NS_CC;
 
-/**************³õÊ¼»¯º¯Êı*************/
+/**************åˆå§‹åŒ–å‡½æ•°*************/
 bool sceneGame::init()
 {
     if (!mainMenu::init())
@@ -10,7 +10,7 @@ bool sceneGame::init()
     }
     mapInit();
     whichTurn();
-    /*******³õÊ¼»¯ÒôÆµ*******/
+    /*******åˆå§‹åŒ–éŸ³é¢‘*******/
 
     smallHero* myyhero1 = new smallHero();
     this->myyhero = myyhero1->initSmall();
@@ -77,18 +77,18 @@ void sceneGame::whichTurn()
     turn_label->setString(mTurn);
 }
 
-/**************Êó±ê²Ù×÷***************/
+/**************é¼ æ ‡æ“ä½œ***************/
 
 void sceneGame::mouseInit()
 {
-    if (afterFight->totalTime<1e-2 && afterFight->totalTime>-1e-2) // ÔÚÕ½¶·ÆÚ¼ä²Å³õÊ¼»¯
+    if (afterFight->totalTime<1e-2 && afterFight->totalTime>-1e-2) // åœ¨æˆ˜æ–—æœŸé—´æ‰åˆå§‹åŒ–
     {
         if (chessSelected < SEPARATION && chessSelected != -1)
         {
             auto crt = static_cast<Hero*>(myPlayerData.battleArray->arr[chessSelected - 1]);
             crt->setPosition(inWhichCell(crt->getTempPosition()));
             crt->set(crt->getTempPosition());
-            chessSelected = -1; // ÖØÖÃÆå×ÓµÄÎ»ÖÃ²¢Çå³ıÑ¡ÖĞ×´Ì¬
+            chessSelected = -1; // é‡ç½®æ£‹å­çš„ä½ç½®å¹¶æ¸…é™¤é€‰ä¸­çŠ¶æ€
         }
     }
 }
@@ -107,18 +107,18 @@ void sceneGame::mouseUp(Event* event)
 {
     auto e = static_cast<EventMouse*>(event);
 
-    if ((int)e->getMouseButton() == 0) // ×ó¼ü
+    if ((int)e->getMouseButton() == 0) // å·¦é”®
     {
-        if (chessSelected >= 0 && chessSelected < SEPARATION) // Ñ¡ÖĞÕ½¶·ÇøÆå×Ó
+        if (chessSelected >= 0 && chessSelected < SEPARATION) // é€‰ä¸­æˆ˜æ–—åŒºæ£‹å­
         {
             auto crt = static_cast<Hero*>(myPlayerData.battleArray->arr[chessSelected]);
-            if (haveChess[pairReturn(crt->getPosition()).x][pairReturn(crt->getPosition()).y] == 1)   // ±ÜÃâÖØ¸´Ñ¡Ôñ
+            if (haveChess[pairReturn(crt->getPosition()).x][pairReturn(crt->getPosition()).y] == 1)   // é¿å…é‡å¤é€‰æ‹©
             {
                 crt->setPosition(inWhichCell(crt->getTempPosition()));
                 crt->set(inWhichCell(crt->getTempPosition()));
 
             }
-            else if (pairReturn(crt->getPosition()).x != 0 && pairReturn(crt->getPosition()).x != 7)   //Èô²»ÔÚµÈºòÇø
+            else if (pairReturn(crt->getPosition()).x != 0 && pairReturn(crt->getPosition()).x != 7)   //è‹¥ä¸åœ¨ç­‰å€™åŒº
             {
                 crt->setPosition(inWhichCell(crt->getPosition()));
                 crt->set(inWhichCell(crt->getPosition()));
@@ -131,15 +131,15 @@ void sceneGame::mouseUp(Event* event)
                 toWaitingArray(crt, myPlayerData);
             }
         }
-        else if (chessSelected >= SEPARATION) // Ñ¡ÖĞ±¸Õ½ÇøµÄÆå×Ó
+        else if (chessSelected >= SEPARATION) // é€‰ä¸­å¤‡æˆ˜åŒºçš„æ£‹å­
         {
             auto crt = static_cast<Hero*>(myPlayerData.waitingArray->arr[chessSelected - SEPARATION]);
-            if (haveChess[pairReturn(crt->getPosition()).x][pairReturn(crt->getPosition()).y] == 1)   // ±ÜÃâÖØ¸´Ñ¡Ôñ
+            if (haveChess[pairReturn(crt->getPosition()).x][pairReturn(crt->getPosition()).y] == 1)   // é¿å…é‡å¤é€‰æ‹©
             {
                 crt->setPosition(inWhichCell(crt->getTempPosition()));
                 crt->set(inWhichCell(crt->getTempPosition()));
             }
-            else if (pairReturn(crt->getPosition()).x == 0 || pairReturn(crt->getPosition()).x == 7)  //ÈôÔÚµÈºòÇø
+            else if (pairReturn(crt->getPosition()).x == 0 || pairReturn(crt->getPosition()).x == 7)  //è‹¥åœ¨ç­‰å€™åŒº
             {
                 //Point temppoint = inWhichCell(temp->getPosition());
                 crt->setPosition(inWhichCell(crt->getPosition()));
@@ -149,7 +149,7 @@ void sceneGame::mouseUp(Event* event)
                 haveChess[pairReturn(crt->getTempPosition()).x][pairReturn(crt->getTempPosition()).y] = 0;
                 crt->setTempPosition();
             }
-            else if (afterFight->totalTime > 1e-6)//½øÈë±¸Õ½Ê±¼ä
+            else if (afterFight->totalTime > 1e-6)//è¿›å…¥å¤‡æˆ˜æ—¶é—´
             {
                 if (myPlayerData.battleArray->num < myPlayerData.playerLevel)
                     toBattleArray(crt, myPlayerData);
@@ -182,8 +182,8 @@ void sceneGame::mouseDown(Event* event)
 {
     auto e = static_cast<EventMouse*>(event);
 
-    // ÅĞ¶ÏÊó±ê°´ÏÂÊÇÔÚ±¸Õ½Çø»¹ÊÇÕ½¶·Çø
-    if (mouseInBattleArray(myPlayerData.battleArray, e) == 1) // »ñµÃÁËchessSelected
+    // åˆ¤æ–­é¼ æ ‡æŒ‰ä¸‹æ˜¯åœ¨å¤‡æˆ˜åŒºè¿˜æ˜¯æˆ˜æ–—åŒº
+    if (mouseInBattleArray(myPlayerData.battleArray, e) == 1) // è·å¾—äº†chessSelected
         mouseInBattleArray(myPlayerData.waitingArray, e);
 }
 
@@ -195,45 +195,45 @@ void sceneGame::mouseMove(Event* event)
 
     if (chessSelected != -1)
     {
-        if (chessSelected < SEPARATION && afterFight->totalTime < 1e-2)// Ã»Ê±¼äÁË,²»½øĞĞÒÆ¶¯²Ù×÷
+        if (chessSelected < SEPARATION && afterFight->totalTime < 1e-2)// æ²¡æ—¶é—´äº†,ä¸è¿›è¡Œç§»åŠ¨æ“ä½œ
         {
             auto crt = static_cast<Hero*>(myPlayerData.battleArray->arr[chessSelected]); // -1?
             crt->setPosition(inWhichCell(crt->getTempPosition()));
             crt->set(inWhichCell(crt->getTempPosition()));
-            chessSelected = -1; // Íê³É²Ù×÷£¬Êó±ê»Øµ½Î´Ñ¡ÖĞ×´Ì¬
+            chessSelected = -1; // å®Œæˆæ“ä½œï¼Œé¼ æ ‡å›åˆ°æœªé€‰ä¸­çŠ¶æ€
             return;
         }
-        else if (chessSelected < SEPARATION) // ¿ÉÒÔÒÆ¶¯Õ½¶·ÇøµÄÆå×Ó
+        else if (chessSelected < SEPARATION) // å¯ä»¥ç§»åŠ¨æˆ˜æ–—åŒºçš„æ£‹å­
         {
             auto crt = static_cast<Hero*>(myPlayerData.battleArray->arr[chessSelected]);// -1?
             auto crtPosition = inWhichCell(crt->getPosition());
 
-            if (crtPosition != Point(-1, -1) && crtPosition.y <= chessMap[3][0].y + eachCell_y / 2) //  ¿ÕÆøÇ½£¬ÏŞÖÆÔÚÎÒ·½³¡ÉÏ
+            if (crtPosition != Point(-1, -1) && crtPosition.y <= chessMap[3][0].y + eachCell_y / 2) //  ç©ºæ°”å¢™ï¼Œé™åˆ¶åœ¨æˆ‘æ–¹åœºä¸Š
             {
                 crt->setPosition(e->getCursorX(), e->getCursorY());
-                crt->set(e->getCursorX(), e->getCursorY());  // ÒÆ¶¯
+                crt->set(e->getCursorX(), e->getCursorY());  // ç§»åŠ¨
             }
             else
             {
                 crt->setPosition(inWhichCell(crt->getTempPosition()));
                 crt->set(inWhichCell(crt->getTempPosition()));
-                chessSelected = -1;  // ÖØÖÃÆå×ÓµÄÎ»ÖÃ²¢Çå³ıÑ¡ÖĞ×´Ì¬
+                chessSelected = -1;  // é‡ç½®æ£‹å­çš„ä½ç½®å¹¶æ¸…é™¤é€‰ä¸­çŠ¶æ€
             }
         }
-        else if (chessSelected >= SEPARATION) // ¶ÔÓÚ±¸Õ½ÇøµÄÆå×Ó
+        else if (chessSelected >= SEPARATION) // å¯¹äºå¤‡æˆ˜åŒºçš„æ£‹å­
         {
             auto crt = static_cast<Hero*>(myPlayerData.waitingArray->arr[chessSelected - SEPARATION]);//-1?
             auto crtPosition = inWhichCell(crt->getPosition());
-            if (crtPosition != Point(-1, -1) && crtPosition.y <= chessMap[3][0].y + eachCell_y / 2) //  ¿ÕÆøÇ½£¬ÏŞÖÆÔÚÎÒ·½³¡ÉÏ chessMapµÄxÊÇwidth£¬ÕâÀïÒªÓÃy
+            if (crtPosition != Point(-1, -1) && crtPosition.y <= chessMap[3][0].y + eachCell_y / 2) //  ç©ºæ°”å¢™ï¼Œé™åˆ¶åœ¨æˆ‘æ–¹åœºä¸Š chessMapçš„xæ˜¯widthï¼Œè¿™é‡Œè¦ç”¨y
             {
                 crt->setPosition(e->getCursorX(), e->getCursorY());
-                crt->set(e->getCursorX(), e->getCursorY());  // ÒÆ¶¯
+                crt->set(e->getCursorX(), e->getCursorY());  // ç§»åŠ¨
             }
             else
             {
                 crt->setPosition(inWhichCell(crt->getTempPosition()));
                 crt->set(inWhichCell(crt->getTempPosition()));
-                chessSelected = -1; // ÖØÖÃÆå×ÓµÄÎ»ÖÃ²¢Çå³ıÑ¡ÖĞ×´Ì¬
+                chessSelected = -1; // é‡ç½®æ£‹å­çš„ä½ç½®å¹¶æ¸…é™¤é€‰ä¸­çŠ¶æ€
             }
         }
     }
@@ -253,48 +253,48 @@ Point sceneGame::inWhichCell(const Point point) const
     return Point(-1, -1);
 }
 
-/**************¼ÆÊ±Æ÷***************/
-void sceneGame::update(float dt) // ÊµÊ±¸üĞÂ
+/**************è®¡æ—¶å™¨***************/
+void sceneGame::update(float dt) // å®æ—¶æ›´æ–°
 {
-    if (afterFight->totalTime > 1e-6) //±¸Õ½Ê±¼ä
+    if (afterFight->totalTime > 1e-6) //å¤‡æˆ˜æ—¶é—´
     {
         heroExist->heroUpgrade(myPlayerData);
         heroExist->heroUpgrade(opPlayerData);
         //addHeroToWaiting(myPlayerData, 0);
         //addHeroToWaiting(opPlayerData, 1);
-        AIPlayer.judgeGold();
+        AIPlayer.executeAIComposite();
 
     }
     addHeroToWaiting(myPlayerData, 0);
     addHeroToWaiting(opPlayerData, 1);
     mouseMainEvent();
 
-    if (afterFight->totalTime < -1e-2) // Õ½¶·Ê±¼ä
+    if (afterFight->totalTime < -1e-2) // æˆ˜æ–—æ—¶é—´
     {
         if (isAI)
         {
             AIPlayer.creatBattleArray();
-            heroExist->aiShowBattleArray();  //ÏÔÊ¾µçÄÔÍæ¼ÒĞÅÏ¢
+            heroExist->aiShowBattleArray();  //æ˜¾ç¤ºç”µè„‘ç©å®¶ä¿¡æ¯
             heroExist->aiShowWaitingArray();
             if (opPlayerData.waitingArray->num == 8)
-                soldHero(opPlayerData, AIPlayer.soldHero(), opPlayerData.waitingArray);   //µçÄÔÂôÆå×Ó
+                soldHero(opPlayerData, AIPlayer.soldHero(), opPlayerData.waitingArray);   //ç”µè„‘å–æ£‹å­
             isAI = 0;
         }
-        mouseInit();   //È¡Ïû¶ÔÕ½¶·ÇøÆå×ÓµÄÑ¡È¡
+        mouseInit();   //å–æ¶ˆå¯¹æˆ˜æ–—åŒºæ£‹å­çš„é€‰å–
         afterFight->setPosition(10000, 10000);
         heroExist->scheduleUpdate();
         if (!this->battleStarted)
         {
             startBattle();
-            battleStarted = true; // È·±£Õ½¶·Ö»¿ªÊ¼Ò»´Î
+            battleStarted = true; // ç¡®ä¿æˆ˜æ–—åªå¼€å§‹ä¸€æ¬¡
         }
         win();
     }
 }
 
-/**************¾ÖÃæ***************/
+/**************å±€é¢***************/
 
-// Ìí¼ÓÓ¢ĞÛµ½µÈ´ıÇø
+// æ·»åŠ è‹±é›„åˆ°ç­‰å¾…åŒº
 void sceneGame::addHeroToWaiting(playerData& player, int playerInfo)
 {
     if (player.playerHaveNewHero)
@@ -375,14 +375,14 @@ void sceneGame::win()
         afterWin(opPlayerData.waitingArray);
         afterWin(opPlayerData.battleArray);
         /*********************************/
-        // Ìí¼ÓÒôÆµ
+        // æ·»åŠ éŸ³é¢‘
         heroExist->unscheduleUpdate();     
         /*********************************/
 
         myPlayerData.updateMoneyAndExp();
         opPlayerData.updateMoneyAndExp();
         battleStarted = false;
-        if (myPlayerData.playerHealth > 0 && opPlayerData.playerHealth > 0) // Ë«·½ÒÀÈ»´æ»î
+        if (myPlayerData.playerHealth > 0 && opPlayerData.playerHealth > 0) // åŒæ–¹ä¾ç„¶å­˜æ´»
         {
             _director->replaceScene(sceneGame::createScene(playerName));
         }
@@ -430,7 +430,7 @@ void sceneGame::afterWin(ccArray* crtArray)
         Hero* crt = static_cast<Hero*>(crtArray->arr[i]);
 
         crt->retain();
-        /************ÊÍ·Å/»Ö¸´******************/
+        /************é‡Šæ”¾/æ¢å¤******************/
         crt->removeFromParent();
         crt->recover();
     }
@@ -448,9 +448,9 @@ void sceneGame::soldHero(playerData& player, Hero* hero, ccArray* Array)
 bool sceneGame::mouseInBattleArray(ccArray* Array, EventMouse* e)
 {
     int temp = (Array == myPlayerData.waitingArray) ? SEPARATION : 0;
-    // Õ½¶·Çø´Ó0¿ªÊ¼£¬±¸Õ½Çø´ÓSEPARATION¿ªÊ¼
+    // æˆ˜æ–—åŒºä»0å¼€å§‹ï¼Œå¤‡æˆ˜åŒºä»SEPARATIONå¼€å§‹
 
-    if (afterFight->totalTime > 0 || afterFight->totalTime <= 0 && temp == SEPARATION)// È·±£ÔÚ±¸Õ½Ê±¼ä
+    if (afterFight->totalTime > 0 || afterFight->totalTime <= 0 && temp == SEPARATION)// ç¡®ä¿åœ¨å¤‡æˆ˜æ—¶é—´
     {
         for (int m = 0; m < Array->num; m++)
         {
@@ -461,11 +461,11 @@ bool sceneGame::mouseInBattleArray(ccArray* Array, EventMouse* e)
                 * (e->getCursorY() - (static_cast<Hero*>(Array->arr[m]))->getPosition().y));
             if (distance < CAN_BE_SELECTED)
             {
-                if ((int)e->getMouseButton() == 0) // ×ó¼ü
+                if ((int)e->getMouseButton() == 0) // å·¦é”®
                 {
                     chessSelected = m + temp;
                 }
-                else if ((int)e->getMouseButton() == 1 && afterFight->totalTime > 1e-2) // ÓÒ¼ü£¬²¢ÇÒÔÚ±¸Õ½Ê±¼ä£¬Âô³öÆå×Ó
+                else if ((int)e->getMouseButton() == 1 && afterFight->totalTime > 1e-2) // å³é”®ï¼Œå¹¶ä¸”åœ¨å¤‡æˆ˜æ—¶é—´ï¼Œå–å‡ºæ£‹å­
                 {
                     auto tempHero = static_cast<Hero*>(Array->arr[m]);
                     soldHero(myPlayerData, tempHero, Array);
@@ -484,11 +484,11 @@ void sceneGame::toBattleArray(Hero* hero, playerData& player)
     hero->setPosition(inWhichCell(hero->getPosition()));
     hero->set(inWhichCell(hero->getPosition()));
 
-    haveChess[pairReturn(hero->getPosition()).x][pairReturn(hero->getPosition()).y] = 1;      //¸ü¸ÄÆå×Ó´æÔÚÇé¿ö
+    haveChess[pairReturn(hero->getPosition()).x][pairReturn(hero->getPosition()).y] = 1;      //æ›´æ”¹æ£‹å­å­˜åœ¨æƒ…å†µ
     haveChess[pairReturn(hero->getTempPosition()).x][pairReturn(hero->getTempPosition()).y] = 0;
     hero->setTempPosition();
-    ccArrayAppendObject(myPlayerData.battleArray, hero);  //·ÅÈëÕ½¶·Çø
-    ccArrayRemoveObject(myPlayerData.waitingArray, hero);   //¸üĞÂ±¸Õ½Çø
+    ccArrayAppendObject(myPlayerData.battleArray, hero);  //æ”¾å…¥æˆ˜æ–—åŒº
+    ccArrayRemoveObject(myPlayerData.waitingArray, hero);   //æ›´æ–°å¤‡æˆ˜åŒº
 }
 
 void sceneGame::toWaitingArray(Hero* hero, playerData& player)
@@ -496,11 +496,11 @@ void sceneGame::toWaitingArray(Hero* hero, playerData& player)
     hero->setPosition(inWhichCell(hero->getPosition()));
     hero->set(inWhichCell(hero->getPosition()));
 
-    haveChess[pairReturn(hero->getPosition()).x][pairReturn(hero->getPosition()).y] = 1;      //¸ü¸ÄÆå×Ó´æÔÚÇé¿ö
+    haveChess[pairReturn(hero->getPosition()).x][pairReturn(hero->getPosition()).y] = 1;      //æ›´æ”¹æ£‹å­å­˜åœ¨æƒ…å†µ
     haveChess[pairReturn(hero->getTempPosition()).x][pairReturn(hero->getTempPosition()).y] = 0;
     hero->setTempPosition();
-    ccArrayAppendObject(myPlayerData.waitingArray, hero);    //·ÅÈë±¸Õ½Çø
-    ccArrayRemoveObject(myPlayerData.battleArray, hero);   //¸üĞÂÕ½¶·Çø
+    ccArrayAppendObject(myPlayerData.waitingArray, hero);    //æ”¾å…¥å¤‡æˆ˜åŒº
+    ccArrayRemoveObject(myPlayerData.battleArray, hero);   //æ›´æ–°æˆ˜æ–—åŒº
 }
 
 sceneGame* sceneGame::createScene(string& userName)
@@ -526,7 +526,7 @@ sceneGame::~sceneGame()
 
 void sceneGame::startBattle()
 {
-    // ±éÀúÕ½¶·ÇøÊı×éÖĞµÄÃ¿¸ö Hero ¶ÔÏó²¢µ÷ÓÃ play º¯Êı
+    // éå†æˆ˜æ–—åŒºæ•°ç»„ä¸­çš„æ¯ä¸ª Hero å¯¹è±¡å¹¶è°ƒç”¨ play å‡½æ•°
     for (int i = 0; i < myPlayerData.battleArray->num; i++)
     {
         auto hero = static_cast<Hero*>(myPlayerData.battleArray->arr[i]);
