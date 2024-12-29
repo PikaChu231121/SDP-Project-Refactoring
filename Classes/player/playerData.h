@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include "game/gameData.h"
 
-#define maxHeroNum 20		// ×î´óÍæ¼ÒÓ¢ĞÛÊıÁ¿
+#define maxHeroNum 20		// æœ€å¤§ç©å®¶è‹±é›„æ•°é‡
 USING_NS_CC;
 
 class HeroCreator;
@@ -12,15 +12,15 @@ class HeroCreator;
 class playerData : public Ref
 {
 private:
-	/*********Íæ¼Ò»ù±¾ĞÅÏ¢**********/
-	int playerMaxHealth = 100;					//Íæ¼ÒÉúÃüÖµ
-	int playerHealth = playerMaxHealth;			//Íæ¼Òµ±Ç°ÉúÃüÖµ
-	int playerLevel = 1;						//Íæ¼ÒµÈ¼¶
-	int playerExp = 0;							//Íæ¼Ò¾­ÑéÖµ
-	int playerMoney = 10;						//Íæ¼Ò½ğÇ®
-	int expToLevelUp = 2;						//Éı¼¶ËùĞè¾­ÑéÖµ
-	void calExp();								//¼ÆËã¾­ÑéÖµ
-	bool playerHaveNewHero = false;				//Íæ¼ÒÊÇ·ñÓµÓĞĞÂÓ¢ĞÛ
+	/*********ç©å®¶åŸºæœ¬ä¿¡æ¯**********/
+	int playerMaxHealth = 100;					//ç©å®¶ç”Ÿå‘½å€¼
+	int playerHealth = playerMaxHealth;			//ç©å®¶å½“å‰ç”Ÿå‘½å€¼
+	int playerLevel = 1;						//ç©å®¶ç­‰çº§
+	int playerExp = 0;							//ç©å®¶ç»éªŒå€¼
+	int playerMoney = 10;						//ç©å®¶é‡‘é’±
+	int expToLevelUp = 2;						//å‡çº§æ‰€éœ€ç»éªŒå€¼
+	void calExp();								//è®¡ç®—ç»éªŒå€¼
+	bool playerHaveNewHero = false;				//ç©å®¶æ˜¯å¦æ‹¥æœ‰æ–°è‹±é›„
 
 	friend class sceneGame;
 	friend class layerPlayer;
@@ -30,22 +30,25 @@ private:
 	friend class layerShop;
 
 public:
-	void playerHurt(int damageBlood) { this->playerHealth -= damageBlood; }		//Íæ¼ÒÊÜÉË
-	void updateMoneyAndExp();													//¸üĞÂ½ğÇ®ºÍ¾­ÑéÖµ
-	void playerInit();															//Íæ¼Ò³õÊ¼»¯
+	int getPlayerMoney() const { return playerMoney; }	
+	void deductMoney(int amount) { playerMoney -= amount; }
+	//è·å–ç©å®¶é‡‘é’±
+	void playerHurt(int damageBlood) { this->playerHealth -= damageBlood; }		//ç©å®¶å—ä¼¤
+	void updateMoneyAndExp();													//æ›´æ–°é‡‘é’±å’Œç»éªŒå€¼
+	void playerInit();															//ç©å®¶åˆå§‹åŒ–
 
-	/*********Íæ¼ÒÓ¢ĞÛĞÅÏ¢**********/
-	ccArray* waitingArray = ccArrayNew(100);	//Íæ¼Ò±¸Õ½ÕóÈİ
-	ccArray* battleArray = ccArrayNew(100);		//Íæ¼ÒÕ½¶·ÕóÈİ
-	int heroNum[maxHeroNum] = { 0 };			//Íæ¼ÒÓµÓĞÓ¢ĞÛÊıÁ¿
-	heroInfo heroForBuy[5];				//Íæ¼Ò¿É¹ºÂòÓ¢ĞÛ
+	/*********ç©å®¶è‹±é›„ä¿¡æ¯**********/
+	ccArray* waitingArray = ccArrayNew(100);	//ç©å®¶å¤‡æˆ˜é˜µå®¹
+	ccArray* battleArray = ccArrayNew(100);		//ç©å®¶æˆ˜æ–—é˜µå®¹
+	int heroNum[maxHeroNum] = { 0 };			//ç©å®¶æ‹¥æœ‰è‹±é›„æ•°é‡
+	heroInfo heroForBuy[5];				//ç©å®¶å¯è´­ä¹°è‹±é›„
 
 
 
-	/*********Íæ¼Ò×°±¸ĞÅÏ¢**********/
-	//ccArray* equippedArray = ccArrayNew(100);		//Íæ¼Ò×°±¸ÕóÈİ£¨ÒÑ×°±¸£©
-	//ccArray* unequippedArray = ccArrayNew(100);		//Íæ¼Ò×°±¸±³°ü£¨Î´×°±¸£©
-	//int equippedNum = 0;							//Íæ¼ÒÒÑ×°±¸×°±¸ÊıÁ¿
+	/*********ç©å®¶è£…å¤‡ä¿¡æ¯**********/
+	//ccArray* equippedArray = ccArrayNew(100);		//ç©å®¶è£…å¤‡é˜µå®¹ï¼ˆå·²è£…å¤‡ï¼‰
+	//ccArray* unequippedArray = ccArrayNew(100);		//ç©å®¶è£…å¤‡èƒŒåŒ…ï¼ˆæœªè£…å¤‡ï¼‰
+	//int equippedNum = 0;							//ç©å®¶å·²è£…å¤‡è£…å¤‡æ•°é‡
 	friend class HeroCreator;
 };
 

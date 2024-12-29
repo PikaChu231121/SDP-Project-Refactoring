@@ -1,10 +1,12 @@
 ﻿// Refactored with Factory Method Pattern
+// Refactored with Adapter Pattern
+
 #ifndef _LAYERS_SHOP_H_
 #define _LAYERS_SHOP_H_
 
 #include "hero/allheros.h"
-#include "hero/heroCreator.h"
-#include "player/playerData.h"
+#include "heroAdapter.h"
+#include "playerAdapter.h"
 #include "cocos2d.h"
 #include <stdlib.h>
 #include <random>
@@ -15,6 +17,7 @@ USING_NS_CC;
 class layerShop : public Layer
 {
 private:
+	PlayerAdapter* playerAdapter;
 	int x = 470;
 	const string heroValue[6] =
 	{ "","1 coin","2 coins","3 coins","4 coins","5 coins" };
@@ -30,6 +33,7 @@ public:
 	CREATE_FUNC(layerShop);
 	virtual bool init();
 	layerShop();
+	~layerShop();
 
 	void refresh1(cocos2d::Ref* pSender);
 	void refresh(playerData& playerData);

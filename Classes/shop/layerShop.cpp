@@ -1,11 +1,19 @@
 ﻿// Refactored with Factory Method Pattern
 // Refactored with Delegation Pattern and Lazy Loading Pattern
+// Refactored with Adapter Pattern
+
 #include "layerShop.h"
 #include "ResourceManager.h"
 
 layerShop::layerShop() {
+	playerAdapter = new PlayerAdapter(&myPlayerData);
 	shop();
 }
+
+layerShop::~layerShop() {
+	delete playerAdapter;
+}
+
 layerShop* layerShop::createLayerShop() {
 	auto tmp = layerShop::create();
 	tmp->retain();
@@ -86,7 +94,8 @@ void layerShop::closeLayer(cocos2d::Ref* pSender)
 
 void layerShop::heroShop(int i)
 {
-	auto label1 = Label::createWithTTF(heroValue[myPlayerData.heroForBuy[i].cost], "fonts/arial.ttf", 28);
+	auto heroData = playerAdapter->getHeroForBuy(i);
+	auto label1 = Label::createWithTTF(heroValue[heroData->cost], "fonts/arial.ttf", 28);
 	subLayer->addChild(label1);
 	label1->setPosition(790 - 350 * (4 - i), 420);
 }
@@ -98,20 +107,17 @@ void layerShop::cover(float x, float y) {
 }
 
 void layerShop::buyHero(int index) {
-	if (myPlayerData.heroForBuy[index].buy == false) {
-		HeroCreator* creator = getHeroCreator(myPlayerData.heroForBuy[index].id);
-		if (creator) {
-			if (creator->canPurchaseHero(myPlayerData.heroForBuy[index].cost, myPlayerData)) {
-				Hero* hero = creator->createHero();
-				creator->addHeroToWaitingList(hero, myPlayerData);
+	auto heroData = playerAdapter->getHeroForBuy(index);
+	if (!heroData->buy) {
+		HeroAdapter heroAdapter(HeroAdapter::getCreatorById(heroData->id));
+			if (heroAdapter.canPurchaseHero(heroData->cost, *playerAdapter->getPlayerData())) {
+				Hero* hero = heroAdapter.createHero();
+				heroAdapter.addHeroToWaitingList(hero, *playerAdapter->getPlayerData());
 
-				myPlayerData.heroForBuy[index].buy = true;
-				myPlayerData.playerMoney -= myPlayerData.heroForBuy[index].cost;
-				cover(790 - 350 * (4 - index), 250); // 使用 index 计算遮罩位置
-
-				delete creator;
+				heroData->buy = true;
+				playerAdapter->deductMoney(heroData->cost);
+				cover(790 - 350 * (4 - index), 250);
 			}
-		}
 	}
 }
 
@@ -139,7 +145,7 @@ void layerShop::shop() {
 	auto reFresh = Menu::create(Refresh, nullptr);
 	reFresh->setPosition(110, 570);
 	subLayer->addChild(reFresh, 1);
-	refresh(myPlayerData);
+	refresh(*playerAdapter->getPlayerData());
 
 	/*------------------buy----------------------------*/
 	for (int i = 0; i < 5; i++) {
@@ -147,10 +153,10 @@ void layerShop::shop() {
 
 		// 创建购买按钮，使用lambda表达式绑定购买函数和索引
 		auto buyButton = MenuItemImage::create(
-			myPlayerData.heroForBuy[i].picName,
-			myPlayerData.heroForBuy[i].picName,
+			playerAdapter->getHeroForBuy(i)->picName,
+			playerAdapter->getHeroForBuy(i)->picName,
 			[this, i](cocos2d::Ref* pSender) {
-				buyHero(i);
+				this->buyHero(i);
 			}
 		);
 
@@ -166,15 +172,14 @@ void layerShop::shop() {
 	/*-----------------------reset buy status-----------*/
 	for (int i = 0; i < 5; i++)
 	{
-		myPlayerData.heroForBuy[i].buy = false;
+		playerAdapter->getHeroForBuy(i)->buy = false;
 	}
 }
 
 void layerShop::refresh1(cocos2d::Ref* pSender) {
 	srand(time(NULL));
-	if (myPlayerData.playerMoney >= 2)
-	{
-		myPlayerData.playerMoney -= 2;
+	if (playerAdapter->canAfford(2)) {
+		playerAdapter->deductMoney(2);
 		subLayer->removeAllChildren();
 		shop();
 	}
@@ -192,12 +197,12 @@ void layerShop::refresh1(cocos2d::Ref* pSender) {
 
 void layerShop::refresh(playerData& playerdata) {
 	srand(time(NULL));
-	for (int i = 0; i < 5; i++)
-	{
+	for (int i = 0; i < 5; i++) {
 		int tmp = rand() % 8 + 1;
-		myPlayerData.heroForBuy[i].buy = false;
-		myPlayerData.heroForBuy[i].id = heroList[tmp - 1].id;
-		myPlayerData.heroForBuy[i].picName = heroList[tmp - 1].picName;
-		myPlayerData.heroForBuy[i].cost = heroList[tmp - 1].cost;
+		auto heroData = playerAdapter->getHeroForBuy(i);
+		heroData->buy = false;
+		heroData->id = heroList[tmp - 1].id;
+		heroData->picName = heroList[tmp - 1].picName;
+		heroData->cost = heroList[tmp - 1].cost;
 	}
 }
