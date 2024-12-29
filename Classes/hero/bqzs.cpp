@@ -1,27 +1,29 @@
+ï»¿// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "bqzs.h"
+#include "ResourceManager.h"
 
 bqzs::bqzs()
 {
-	name = "²»ÇüÕ½Éñ", skillname = "ÉóÅÐ", advice = "Ç°ÅÅ";
-	skillType = PHYSICS;//Ì¹¿Ë
+	name = "ä¸å±ˆæˆ˜ç¥ž", skillname = "å®¡åˆ¤", advice = "å‰æŽ’";
+	skillType = PHYSICS;
 	blood = 600;
-	maxBlood = 600;//ÑªÁ¿
-	level = 1; //µÈ¼¶
-	attack = 50; //¹¥»÷Á¦
-	protect = 40;//»¤¼×
-	magicPro = 20;//Ä§¿¹
-	attackDistance = 1;//¹¥»÷¾àÀë
-	state = 1;//¼¼ÄÜ×´Ì¬
-	price = 1;//»¨·Ñ
-	speed = 0.6;//¹¥ËÙ
+	maxBlood = 600;
+	level = 1; 
+	attack = 50;
+	protect = 40;
+	magicPro = 20;
+	attackDistance = 1;
+	state = 1;
+	price = 1;
+	speed = 0.6;
 }
 
 void bqzs::upLevel(Hero* bqzs1)
 {
-	bqzs1->blood = 1080;//µ±Ç°ÑªÁ¿
-	bqzs1->maxBlood = 1080;//ÉúÃüÖµ
-	bqzs1->level = 2; //µÈ¼¶
-	bqzs1->attack = 90; //¹¥»÷Á¦
+	bqzs1->blood = 1080;
+	bqzs1->maxBlood = 1080;
+	bqzs1->level = 2; 
+	bqzs1->attack = 90;
 	setScale(0.35f);
 }
 
@@ -32,7 +34,7 @@ Hero* bqzs::initbqzs()
 	//my = bqzs;
 	bqzs->picturename = "./hero/bqzs.png";
 	bqzs->picturenum = 1;
-	bqzs->heroAnimation(bqzs->picturename, bqzs->picturenum, bqzs,speed, -1);
+	bqzs->heroAnimation(bqzs->picturename, bqzs->picturenum, bqzs, speed, -1);
 	//tfns->autorelease();
 	return bqzs;
 }
@@ -45,12 +47,12 @@ void bqzs::Play()
 	static Hero* enemy;
 	static int attackNum = 0;
 	auto lambda = [=](float dt) {
-		enemy = getEnemyByDistance(this, true, this->ofPlayer);//ËøµÐ
+		enemy = getEnemyByDistance(this, true, this->ofPlayer);
 		if (enemy != nullptr)
 			this->update(this, enemy, dt);
 		this->healthBar->setPercentage(((double)blood / (double)maxBlood) * 100);
 		isDead();
-	};
+		};
 	this->schedule(lambda, 1 / 60.f, "bqzsMove");
 	magicPro = magicpro;
 	protect = pro;
@@ -61,23 +63,23 @@ void bqzs::Play()
 		hurt = (int)(enemy->attackRate * attack);
 	}
 	auto lambdb = [=](float dt) {
-		if(enemy!=nullptr&&state==ATTACK)
+		if (enemy != nullptr && state == ATTACK)
 		{
 			bqzs::bqzsnormalAttack(enemy, hurt, add);
-			attackNum++;//¶Ô¸ÃµÐÈËµÄ¹¥»÷´ÎÊý+1
+			attackNum++;
 		}
-	};
+		};
 	this->schedule(lambdb, 1 / speed, "bqzsAttack");
-		//ÊÍ·Å¼¼ÄÜ
+
 	if (blue == blueMax) {
 		attackRate = 0.25;
 		auto lambda = [=](float dt) {
 			if (enemy != nullptr && state == ATTACK)
 				enemy->blood -= (int)(hurt - (enemy->protect) + add);
-		};
-		this->schedule(lambda, 1 / speed * 2, "bqzsSkill");//¿ìËÙµÄÊÍ·Å¼¼ÄÜ
+			};
+		this->schedule(lambda, 1 / speed * 2, "bqzsSkill");
 		blue = 0;
-		attackRate = 1;//»Ö¸´
+		attackRate = 1;
 	}
 	magicPro = magicpro;
 	protect = pro;
@@ -86,7 +88,7 @@ void bqzs::Play()
 void bqzs::bqzsnormalAttack(Hero* enemy, int hurt, double add)
 {
 	blue += 30;
-	enemy->protect > hurt ? enemy->blood -= 0 : enemy->blood -= hurt - enemy->protect;//»¤¼×µÖÏû²¿·ÖÉËº¦
+	enemy->protect > hurt ? enemy->blood -= 0 : enemy->blood -= hurt - enemy->protect;
 	if (enemy->blood < 0)
 		enemy->blood = 0;
 	swordwaive(this);
@@ -94,38 +96,37 @@ void bqzs::bqzsnormalAttack(Hero* enemy, int hurt, double add)
 
 void bqzs::swordwaive(Hero* my)
 {
-	Sprite* sword = Sprite::create("./hero/sword.png");
+	Sprite* sword = ResourceManager::CreateNewSprite("./hero/sword.png");
 	my->addChild(sword, 3);
 	sword->setScale(2.0f);
 	sword->setPosition(Vec2(600, 300));
-	// »ÓÎèµ¶µÄ¶¯×÷ÐòÁÐ
 	auto waive = Sequence::create(
-		RotateTo::create(1.0f, 90),   // µ¶Ïò×óÐý×ª
-		RotateTo::create(1.0f, 0),      // µ¶»Ö¸´Ô­Ê¼½Ç¶È
+		RotateTo::create(1.0f, 90),
+		RotateTo::create(1.0f, 0),   
 		CallFunc::create([sword]() {
 			sword->removeFromParent();
 			}),
 		nullptr
-				);
-	// Ö´ÐÐ¶¯×÷ÐòÁÐ
+	);
+
 	sword->runAction(waive);
 }
 
 void bqzs::swordswing(Hero* my)
 {
-	Sprite* sword = Sprite::create("./hero/sword.png");
+	Sprite* sword = ResourceManager::CreateNewSprite("./hero/sword.png");
 	my->addChild(sword, 3);
 	sword->setScale(2.0f);
 	sword->setPosition(Vec2(600, 300));
 
-	// Ðý×ªµ¶µÄ¶¯×÷ÐòÁÐ
+
 	auto swing = Sequence::create(
 		RotateTo::create(1.0f, 360),
 		CallFunc::create([sword]() {
 			sword->removeFromParent();
 			}),
 		nullptr
-				);
-	// Ö´ÐÐ¶¯×÷ÐòÁÐ
+	);
+
 	sword->runAction(swing);
 }

@@ -1,3 +1,4 @@
+﻿// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "cocos2d.h"
 #include "AppDelegate.h"
 #include "mainMenu.h"
@@ -28,7 +29,7 @@ bool sceneName::init()
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	/**************Background****************/
-	auto bg = Sprite::create("./mainMenu/aboutBG.jpg");
+	auto bg = ResourceManager::CreateNewSprite("./mainMenu/aboutBG.jpg");
 	bg->setPosition(800, 460);
 	this->addChild(bg);
 
@@ -47,7 +48,7 @@ bool sceneName::init()
 
 	/**************Label UserName***************/
 	auto label = Label::createWithTTF("Please Enter Your Name", "fonts/betterFont.ttf", 48);
-	if(label == nullptr)
+	if (label == nullptr)
 	{
 		problemLoading("'fonts/Marker Felt.ttf'");
 	}
@@ -77,8 +78,8 @@ bool sceneName::init()
 
 	/**************Button Return***************/
 	 /*----------------MenuItemSprite aboutBack---------------------*/
-	Sprite* aboutBackNormal = Sprite::create("./mainMenu/backToMenuNormal.png");
-	Sprite* aboutBackSelected = Sprite::create("./mainMenu/backToMenuSelected.png");
+	Sprite* aboutBackNormal = ResourceManager::CreateNewSprite("./mainMenu/backToMenuNormal.png");
+	Sprite* aboutBackSelected = ResourceManager::CreateNewSprite("./mainMenu/backToMenuSelected.png");
 
 	MenuItemSprite* aboutBack = MenuItemSprite::create(aboutBackNormal, aboutBackSelected,
 		CC_CALLBACK_1(sceneName::returnToMenu, this));
@@ -101,8 +102,8 @@ bool sceneName::init()
 	this->addChild(menuAboutBack, 1);
 
 	/**************Button AI***************/
-	Sprite* aiNormal = Sprite::create("./mainMenu/modeAiNormal.png");
-	Sprite* aiSelected = Sprite::create("./mainMenu/modeAiSelected.png");
+	Sprite* aiNormal = ResourceManager::CreateNewSprite("./mainMenu/modeAiNormal.png");
+	Sprite* aiSelected = ResourceManager::CreateNewSprite("./mainMenu/modeAiSelected.png");
 
 	MenuItemSprite* aiMode = MenuItemSprite::create(aiNormal, aiSelected,
 		CC_CALLBACK_1(sceneName::modeAI, this));
@@ -115,7 +116,7 @@ bool sceneName::init()
 	}
 	else
 	{
-		aiMode->setPosition(CENTER_WIN_X, CENTER_WIN_Y - aiMode->getContentSize().height-150);
+		aiMode->setPosition(CENTER_WIN_X, CENTER_WIN_Y - aiMode->getContentSize().height - 150);
 	}
 
 	auto menuaiMode = Menu::create(aiMode, nullptr);

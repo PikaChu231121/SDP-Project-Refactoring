@@ -1,3 +1,4 @@
+﻿// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "sceneAbout.h"
 #include "mainMenu.h"
 #include "globalResSetting.h"
@@ -12,6 +13,7 @@
 #include "shop/layerShop.h"
 #include <vector>
 #include "inGameTimer/inGameTimer.h"
+#include "ResourceManager.h"
 
 using std::vector;
 
@@ -26,7 +28,7 @@ void sceneAbout::playAllHeros(float dt) {
 
 Scene* sceneAbout::createScene()
 {
-	return sceneAbout::create();
+    return sceneAbout::create();
 }
 
 bool sceneAbout::init()
@@ -38,26 +40,26 @@ bool sceneAbout::init()
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    
-    /*----------------MenuItemSprite aboutBack---------------------*/
-    Sprite* aboutBackNormal = Sprite::create("./mainMenu/backToMenuNormal.png");
-    Sprite* aboutBackSelected = Sprite::create("./mainMenu/backToMenuSelected.png");
 
-    MenuItemSprite* aboutBack = MenuItemSprite::create(aboutBackNormal, aboutBackSelected, 
-                                                        CC_CALLBACK_1(sceneAbout::aboutBack, this));
+    /*----------------MenuItemSprite aboutBack---------------------*/
+    Sprite* aboutBackNormal = ResourceManager::CreateNewSprite("./mainMenu/backToMenuNormal.png");
+    Sprite* aboutBackSelected = ResourceManager::CreateNewSprite("./mainMenu/backToMenuSelected.png");
+
+    MenuItemSprite* aboutBack = MenuItemSprite::create(aboutBackNormal, aboutBackSelected,
+        CC_CALLBACK_1(sceneAbout::aboutBack, this));
 
     if (aboutBack == nullptr ||
         aboutBack->getContentSize().width <= 0 ||
         aboutBack->getContentSize().height <= 0)
     {
-		problemLoading("'backToMenuNormal.png' and 'backToMenuSelected.png'");
-	}
+        problemLoading("'backToMenuNormal.png' and 'backToMenuSelected.png'");
+    }
     else
     {
-		float x = CENTER_WIN_X;
+        float x = CENTER_WIN_X;
         float y = BOTTOM_WIN_Y + aboutBack->getContentSize().height / 2 + 5;
-		aboutBack->setPosition(Vec2(x, y));
-	}
+        aboutBack->setPosition(Vec2(x, y));
+    }
 
     auto menuAboutBack = Menu::create(aboutBack, nullptr);
     menuAboutBack->setPosition(Vec2::ZERO);
@@ -67,16 +69,16 @@ bool sceneAbout::init()
     auto labelAbout = Label::createWithTTF("About", "./fonts/Marker Felt.ttf", 60);
     if (labelAbout == nullptr)
     {
-		problemLoading("'fonts/Marker Felt.ttf'");
-	}
+        problemLoading("'fonts/Marker Felt.ttf'");
+    }
     else
     {
-		// position the label on the center of the screen
+        // position the label on the center of the screen
         labelAbout->setPosition(Vec2(CENTER_WIN_X, TOP_WIN_Y - labelAbout->getContentSize().height + 10));
 
-		// add the label as a child to this layer
-		this->addChild(labelAbout, 1);
-	}
+        // add the label as a child to this layer
+        this->addChild(labelAbout, 1);
+    }
 
     /*-------------------Label aboutText---------------*/
 
@@ -95,11 +97,11 @@ bool sceneAbout::init()
     }
 
     /*------------------background setting-------------------*/
-    auto sprite1 = Sprite::create("./mainMenu/aboutBG.jpg");
+    auto sprite1 = ResourceManager::CreateNewSprite("./mainMenu/aboutBG.jpg");
 
     sprite1->setPosition(800, 460);
     this->addChild(sprite1);
-    
+
 
     return true;
 }

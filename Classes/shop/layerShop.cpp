@@ -1,5 +1,7 @@
 ﻿// Refactored with Factory Method Pattern
+// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "layerShop.h"
+#include "ResourceManager.h"
 
 layerShop::layerShop() {
 	shop();
@@ -55,7 +57,7 @@ void layerShop::closeShop() {
 		CC_CALLBACK_1(layerShop::closeLayer, this));
 	auto Close = Menu::create(closeShopButton, nullptr);
 	Close->setPosition(-250, 200);
-	Close->setScale(0.1f); 
+	Close->setScale(0.1f);
 	this->addChild(Close, 1);
 }
 
@@ -69,7 +71,7 @@ void layerShop::openLayer(cocos2d::Ref* pSender) {
 	}
 }
 
-void layerShop::closeLayer(cocos2d::Ref* pSender) 
+void layerShop::closeLayer(cocos2d::Ref* pSender)
 {
 	subLayer->setPosition(20000, 20000);
 	openShop();
@@ -82,7 +84,7 @@ void layerShop::closeLayer(cocos2d::Ref* pSender)
 	}
 }
 
-void layerShop::heroShop(int i) 
+void layerShop::heroShop(int i)
 {
 	auto label1 = Label::createWithTTF(heroValue[myPlayerData.heroForBuy[i].cost], "fonts/arial.ttf", 28);
 	subLayer->addChild(label1);
@@ -90,7 +92,7 @@ void layerShop::heroShop(int i)
 }
 
 void layerShop::cover(float x, float y) {
-	auto cover = Sprite::create("./shop/cover.png");
+	auto cover = ResourceManager::CreateNewSprite("./shop/cover.png");
 	subLayer->addChild(cover, 3);
 	cover->setPosition(x, y);
 }
@@ -118,12 +120,12 @@ void layerShop::shop() {
 	x = 650;
 	y = 350;
 	subLayer = Layer::create();
-	subLayer->setPosition(x,y);
+	subLayer->setPosition(x, y);
 	subLayer->setScale(0.6f);
 	this->addChild(subLayer, 2);
 
 	/*-------------------set background----------------------*/
-	auto sprite = Sprite::create("./shop/backgroundofshop.png");
+	auto sprite = ResourceManager::CreateNewSprite("./shop/backgroundofshop.png");
 	sprite->setPosition(80, 250);
 	subLayer->addChild(sprite);
 

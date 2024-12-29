@@ -1,3 +1,4 @@
+ï»¿// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "mainMenu.h"
 #include "HelloWorldScene.h"
 #include "globalResSetting.h"
@@ -17,11 +18,11 @@ Scene* mainMenu::createScene()
 // on "init" you need to initialize your instance
 bool mainMenu::init()
 {
-	// 1. super init first
+    // 1. super init first
     if (!Scene::init())
     {
-		return false;
-	}
+        return false;
+    }
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -29,9 +30,9 @@ bool mainMenu::init()
 
     /*----------------MenuItemImage closeItem---------------------*/
     auto closeItem = MenuItemImage::create(
-                                             "CloseNormal.png",
-                                             "CloseSelected.png",
-                                              CC_CALLBACK_1(mainMenu::menuCloseCallback, this));
+        "CloseNormal.png",
+        "CloseSelected.png",
+        CC_CALLBACK_1(mainMenu::menuCloseCallback, this));
 
     if (closeItem == nullptr ||
         closeItem->getContentSize().width <= 0 ||
@@ -56,7 +57,7 @@ bool mainMenu::init()
     /*----------------MenuBackground---------------------*/
 
     // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create(BG_PNG);
+    auto sprite = ResourceManager::CreateNewSprite(BG_PNG);
     if (sprite == nullptr)
     {
         problemLoading("'mainMenuBackground.png'");
@@ -80,7 +81,7 @@ bool mainMenu::init()
     Sprite* newGameNormal = Sprite::create(BG_BTNS, Rect(0, 0, singalWidth, singalHeight));
     Sprite* newGameSelected = Sprite::create(BG_BTNS, Rect(0, singalHeight, singalWidth, singalHeight));
 
-    MenuItemSprite* newGame = MenuItemSprite::create(newGameNormal, newGameSelected, 
+    MenuItemSprite* newGame = MenuItemSprite::create(newGameNormal, newGameSelected,
         CC_CALLBACK_1(mainMenu::onNewGame, this));
 
     if (newGame == nullptr ||
@@ -100,8 +101,8 @@ bool mainMenu::init()
     auto menuNewGame = Menu::create(newGame, nullptr);
     menuNewGame->setPosition(Vec2::ZERO);
     this->addChild(menuNewGame);
-   
-    
+
+
     /*----------------MenuItemSprite gameSettings--------------------*/
     Sprite* gameSettingsNormal = Sprite::create(BG_BTNS, Rect(singalWidth, 0, singalWidth, singalHeight));
     Sprite* gameSettingsSelected = Sprite::create(BG_BTNS, Rect(singalWidth, singalHeight, singalWidth, singalHeight));
@@ -126,31 +127,30 @@ bool mainMenu::init()
     auto menuGameSettings = Menu::create(gameSettings, nullptr);
     menuGameSettings->setPosition(Vec2::ZERO);
     this->addChild(menuGameSettings);
- 
-    
+
+
     /*----------------MenuItemSprite about--------------------*/
     Sprite* aboutNormal = Sprite::create(BG_BTNS, Rect(singalWidth * 2, 0, singalWidth, singalHeight));
     Sprite* aboutSelected = Sprite::create(BG_BTNS, Rect(singalWidth * 2, singalHeight, singalWidth, singalHeight));
 
-    MenuItemSprite* about = MenuItemSprite::create(aboutNormal, aboutSelected, 
+    MenuItemSprite* about = MenuItemSprite::create(aboutNormal, aboutSelected,
         CC_CALLBACK_1(mainMenu::onAbout, this));
 
-    //¡°¹ØÓÚ¡±°´Å¥tagÎª21
     about->setTag(21);
 
     if (about == nullptr ||
         about->getContentSize().width <= 0 ||
         about->getContentSize().height <= 0)
     {
-		problemLoading("'aboutNormal.png' and 'aboutSelected.png'");
-	}
+        problemLoading("'aboutNormal.png' and 'aboutSelected.png'");
+    }
     else
     {
-		float x = CENTER_WIN_X;
+        float x = CENTER_WIN_X;
         float y = CENTER_WIN_Y - 300 - singalHeight * 2 - 30;
-		about->setPosition(Vec2(x, y));
+        about->setPosition(Vec2(x, y));
         about->setScale(BG_SCALE);
-	}
+    }
 
     auto menuAbout = Menu::create(about, nullptr);
     menuAbout->setPosition(Vec2::ZERO);
@@ -162,7 +162,6 @@ bool mainMenu::init()
     //MenuItemSprite* test = MenuItemSprite::create(about1Normal, about1Selected,
     //    CC_CALLBACK_1(mainMenu::onTest, this));
 
-    ////¡°¹ØÓÚ¡±°´Å¥tagÎª21
     //test->setTag(26);
 
     //if (test == nullptr ||

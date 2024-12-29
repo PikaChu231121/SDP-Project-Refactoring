@@ -1,7 +1,9 @@
+﻿// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "sceneSetting.h"
 #include "globalResSetting.h"
 #include "mainMenu.h"
 #include "AudioEngine.h"
+#include "ResourceManager.h"
 
 USING_NS_CC;
 
@@ -12,17 +14,17 @@ Scene* sceneSettings::createScene()
 
 bool sceneSettings::init()
 {
-	if (!Scene::init())
-	{
-		return false;
-	}
+    if (!Scene::init())
+    {
+        return false;
+    }
 
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     /*----------------MenuItemSprite settingsBack---------------------*/
-    Sprite* settingsBackNormal = Sprite::create("./mainMenu/backToMenuNormal.png");
-    Sprite* settingsBackSelected = Sprite::create("./mainMenu/backToMenuSelected.png");
+    Sprite* settingsBackNormal = ResourceManager::CreateNewSprite("./mainMenu/backToMenuNormal.png");
+    Sprite* settingsBackSelected = ResourceManager::CreateNewSprite("./mainMenu/backToMenuSelected.png");
 
     MenuItemSprite* settingsBack = MenuItemSprite::create(settingsBackNormal, settingsBackSelected,
         CC_CALLBACK_1(sceneSettings::settingsBack, this));
@@ -60,50 +62,50 @@ bool sceneSettings::init()
     }
 
     /*------------------background setting-------------------*/
-    auto sprite1 = Sprite::create("./mainMenu/aboutBG.jpg");
+    auto sprite1 = ResourceManager::CreateNewSprite("./mainMenu/aboutBG.jpg");
 
     sprite1->setPosition(800, 460);
     this->addChild(sprite1);
 
     /*----------------MenuItemSprite switchSound---------------------*/
     auto* labelSound = Label::createWithTTF("Sound", "./fonts/Marker Felt.ttf", 60);
-    Sprite* soundOffNormal = Sprite::create("./mainMenu/soundOffNormal.png");
-    Sprite* soundOffSelected = Sprite::create("./mainMenu/soundOffSelected.png");
-    Sprite* soundOnNormal = Sprite::create("./mainMenu/soundOnNormal.png");
-    Sprite* soundOnSelected = Sprite::create("./mainMenu/soundOnSelected.png");
+    Sprite* soundOffNormal = ResourceManager::CreateNewSprite("./mainMenu/soundOffNormal.png");
+    Sprite* soundOffSelected = ResourceManager::CreateNewSprite("./mainMenu/soundOffSelected.png");
+    Sprite* soundOnNormal = ResourceManager::CreateNewSprite("./mainMenu/soundOnNormal.png");
+    Sprite* soundOnSelected = ResourceManager::CreateNewSprite("./mainMenu/soundOnSelected.png");
 
     MenuItemSprite* soundOff = MenuItemSprite::create(soundOffNormal, soundOffSelected,
-        		            CC_CALLBACK_1(sceneSettings::soundOff, this));
+        CC_CALLBACK_1(sceneSettings::soundOff, this));
     MenuItemSprite* soundOn = MenuItemSprite::create(soundOnNormal, soundOnSelected,
-                            CC_CALLBACK_1(sceneSettings::soundOn, this));
+        CC_CALLBACK_1(sceneSettings::soundOn, this));
     if (labelSound == nullptr ||
         labelSound->getContentSize().width <= 0 ||
         labelSound->getContentSize().height <= 0)
     {
-		problemLoading("'fonts/Marker Felt.ttf'");
-	}
+        problemLoading("'fonts/Marker Felt.ttf'");
+    }
     else
     {
-		float x = CENTER_WIN_X;
+        float x = CENTER_WIN_X;
         float y = CENTER_WIN_Y + labelSound->getContentSize().height;
         labelSound->setPosition(Vec2(x, y));
         labelSound->setColor(Color3B::BLACK);
         this->addChild(labelSound, 1);
-	}
+    }
 
 
     if (soundOff == nullptr ||
         soundOff->getContentSize().width <= 0 ||
         soundOff->getContentSize().height <= 0)
     {
-		problemLoading("'soundOffNormal.png' and 'soundOffSelected.png'");
-	}
+        problemLoading("'soundOffNormal.png' and 'soundOffSelected.png'");
+    }
     else
     {
         float x = CENTER_WIN_X - soundOff->getContentSize().width / 2 - 10;
         float y = CENTER_WIN_Y - 20;
-		soundOff->setPosition(Vec2(x, y));
-	}
+        soundOff->setPosition(Vec2(x, y));
+    }
     auto menuSoundOff = Menu::create(soundOff, nullptr);
     menuSoundOff->setPosition(Vec2::ZERO);
     this->addChild(menuSoundOff, 1);
@@ -135,10 +137,10 @@ void sceneSettings::settingsBack(Ref* pSender)
 
 void sceneSettings::soundOff(Ref* pSender)
 {
-	AudioEngine::pauseAll();
+    AudioEngine::pauseAll();
 }
 
 void sceneSettings::soundOn(Ref* pSender)
 {
-	AudioEngine::resumeAll();
+    AudioEngine::resumeAll();
 }

@@ -1,4 +1,5 @@
 ﻿// Refactored with Factory Method Pattern
+// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "hero.h"
 #include "tfns.h"
 #include "mlps.h"
@@ -8,21 +9,22 @@
 #include "yn.h"
 #include "qxsq.h"
 #include "snzx.h"
+#include "ResourceManager.h"
 
-bool Hero::connection(const playerData& myPlayerData) 
+bool Hero::connection(const playerData& myPlayerData)
 {
     for (size_t i = 0; i < myPlayerData.battleArray->num; i++)
     {
         Hero* tmp = static_cast<Hero*>(myPlayerData.battleArray->arr[i]);
-        if (tmp->name == "天罚弩神") 
+        if (tmp->name == "天罚弩神")
         {
-            for (size_t j = 0; j < myPlayerData.battleArray->num; j++) 
+            for (size_t j = 0; j < myPlayerData.battleArray->num; j++)
             {
                 Hero* tmp2 = static_cast<Hero*>(myPlayerData.battleArray->arr[j]);
-                if (tmp2->name == "未来守护者") 
+                if (tmp2->name == "未来守护者")
                 {
-                    Sprite* connect1 = Sprite::create("./hero/connect.png");
-                    Sprite* connect2 = Sprite::create("./hero/connect.png");
+                    Sprite* connect1 = ResourceManager::CreateNewSprite("./hero/connect.png");
+                    Sprite* connect2 = ResourceManager::CreateNewSprite("./hero/connect.png");
                     connect1->setScale(2.5f);
                     connect2->setScale(2.5f);
                     tmp->addChild(connect1);
@@ -31,7 +33,7 @@ bool Hero::connection(const playerData& myPlayerData)
                     connect2->setPosition(Vec2(600, 400));
                     auto lambda = [=](float dt) {
                         tmp2->attack += 10;
-                    };
+                        };
                     this->schedule(lambda, 1 / 60.f, "connection");
                     return true;
                 }
@@ -48,15 +50,15 @@ Node* Hero::createHealthBar(double percentage)
     string foregroundTexture = "./hero/foregroundTexture.png";
     CCLOG("blood=%f", ((double)blood / (double)maxBlood) * 100);
     // 创建血条底部背景精灵
-    Sprite* backgroundSprite = Sprite::create(backgroundTexture);
+    Sprite* backgroundSprite = ResourceManager::CreateNewSprite(backgroundTexture);
     backgroundSprite->setScale(0.25f);
 
     // 创建血条前景精灵
-    /*Sprite* foregroundSprite = Sprite::create(foregroundTexture);
+    /*Sprite* foregroundSprite = ResourceManager::CreateNewSprite(foregroundTexture);
     foregroundSprite->setScale(0.25f);*/
 
     // 创建血条的 ProgressTimer
-    healthBar = ProgressTimer::create(Sprite::create(foregroundTexture));
+    healthBar = ProgressTimer::create(ResourceManager::CreateNewSprite(foregroundTexture));
     healthBar->setScale(0.25f);
     healthBar->setType(ProgressTimer::Type::BAR);
     healthBar->setMidpoint(Point(0, 1));
@@ -65,7 +67,7 @@ Node* Hero::createHealthBar(double percentage)
 
     // 设置血条底部背景精灵和 ProgressTimer 的位置
     backgroundSprite->setPosition(Point(400, 500));
-    healthBar->setPosition(Point(400,500));
+    healthBar->setPosition(Point(400, 500));
 
     // 创建容器节点，将血条底部背景精灵和 ProgressTimer 添加到容器中
     Node* containerNode = Node::create();
@@ -201,7 +203,7 @@ void Dizzy(Hero* enemy)
     //英雄变成灰色
     enemy->setColor(Color3B::GRAY);
     // 创建精灵
-    Sprite* dizzy = Sprite::create("./hero/dizzy.png");
+    Sprite* dizzy = ResourceManager::CreateNewSprite("./hero/dizzy.png");
     enemy->addChild(dizzy);
     dizzy->setPosition(Vec2(500, 400));
 
@@ -218,7 +220,7 @@ void Dizzy(Hero* enemy)
         enemy->setColor(Color3B::WHITE);
         // 重新启用英雄的动作
         enemy->heroAnimation(enemy->picturename, enemy->picturenum, enemy, enemy->speed, -1);
-    };
+        };
     enemy->scheduleOnce(lambda, 3, "dizzyKey");
 }
 
@@ -235,7 +237,7 @@ void sevInjure(Hero* enemy)
         // 重新启用英雄
         enemy->movespeed = enemy->movespeed * 2;
         enemy->speed = enemy->speed * 2;
-    };
+        };
     enemy->scheduleOnce(lambda, 2, "sevInjureKey");
 }
 
@@ -253,7 +255,7 @@ void relProtect(Hero* enemy)
         // 在这里添加恢复正常状态的操作，将英雄的颜色恢复为原始颜色
         enemy->setColor(Color3B::WHITE);
         enemy->protect = (int)(enemy->protect * 1.25);
-    };
+        };
     enemy->scheduleOnce(lambda, 2, "relProtect");
 }
 
@@ -264,14 +266,14 @@ void immune(Hero* enemy)
     enemy->attackRate = 0;
     auto lambda = [=](float dt) {
         enemy->attackRate = Rate;
-    };
+        };
     enemy->scheduleOnce(lambda, 2, "immuneKey");
 }
 
 void bomb(Hero* enemy, int attack)
 {
     // 创建精灵
-    Sprite* bomb = Sprite::create("./hero/bomb.png");
+    Sprite* bomb = ResourceManager::CreateNewSprite("./hero/bomb.png");
     enemy->addChild(bomb);
     bomb->setPosition(Vec2(500, 400));
 
@@ -283,14 +285,14 @@ void bomb(Hero* enemy, int attack)
     bomb->runAction(sequence);
     auto lambda = [=](float dt) {
         enemy->blood -= (int)(attack * enemy->attackRate * 1.5);
-    };
+        };
     enemy->scheduleOnce(lambda, 2, "bombKey");
 }
 
 void lightning(Hero* enemy, const int hurt)
 {
     // 创建精灵
-    Sprite* light = Sprite::create("./hero/lightning.png");
+    Sprite* light = ResourceManager::CreateNewSprite("./hero/lightning.png");
     enemy->addChild(light);
     light->setPosition(Vec2(500, 400));
 

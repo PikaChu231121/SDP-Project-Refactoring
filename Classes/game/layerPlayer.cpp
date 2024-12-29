@@ -1,4 +1,6 @@
+﻿// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "game/layerPlayer.h"
+#include "ResourceManager.h"
 
 const Point myBloodPos = Point(180, 610);
 const Point myExpPos = Point(180, 590);
@@ -11,7 +13,7 @@ layerPlayer* layerPlayer::createPlayer(string& name)
 	auto player = layerPlayer::create();
 
 	/**********myPlayer nickName and avatar************/
-	Sprite* myAvatar = Sprite::create("./player/avatar1.png");
+	Sprite* myAvatar = ResourceManager::CreateNewSprite("./player/avatar1.png");
 	myAvatar->setPosition(50, 600);
 	myAvatar->setScale(0.035f);
 	player->addChild(myAvatar);
@@ -21,7 +23,7 @@ layerPlayer* layerPlayer::createPlayer(string& name)
 	player->addChild(myName, 1);
 
 	/**********opPlayer nickName and avatar************/
-	Sprite* opAvatar = Sprite::create("./player/avatar2.png");
+	Sprite* opAvatar = ResourceManager::CreateNewSprite("./player/avatar2.png");
 	opAvatar->setPosition(50, 700);
 	player->addChild(opAvatar);
 
@@ -49,18 +51,18 @@ bool layerPlayer::init()
 	/*************buyExp***************/
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	MenuItemImage* buyExp = MenuItemImage::create("./player/buyExpNormal.png", "./player/buyExpSelected.png", 
+	MenuItemImage* buyExp = MenuItemImage::create("./player/buyExpNormal.png", "./player/buyExpSelected.png",
 		CC_CALLBACK_1(layerPlayer::buyExp, this));
 	Menu* menuBuyExp = Menu::create(buyExp, nullptr);
 	menuBuyExp->setAnchorPoint(Vec2(0, 0));
 	buyExp->setScale(2.0f);
-	menuBuyExp->setPosition(origin.x + buyExp->getContentSize().width , origin.y + buyExp->getContentSize().height);
-	
+	menuBuyExp->setPosition(origin.x + buyExp->getContentSize().width, origin.y + buyExp->getContentSize().height);
+
 	this->addChild(menuBuyExp, 1);
 
 	/*************myPlayer UIs***************/
 	/**************BloodBar**************/
-	this->setPosition(0,0);
+	this->setPosition(0, 0);
 	playerHPBarBg->setPosition(myBloodPos);
 	playerHPBarBg->setScale(0.25f);
 	this->addChild(playerHPBarBg, 1);
@@ -93,7 +95,7 @@ bool layerPlayer::init()
 	this->addChild(Levels, 3);
 
 	/**************Coins**************/
-	Coins->setPosition(300,640);
+	Coins->setPosition(300, 640);
 	this->addChild(Coins, 3);
 
 	/*************opPlayer UIs***************/
@@ -102,7 +104,7 @@ bool layerPlayer::init()
 	opplayerHPBarBg->setPosition(opBloodPos);
 	opplayerHPBarBg->setScale(0.25f);
 	this->addChild(opplayerHPBarBg, 1);
-	
+
 	opplayerHPBar->setType(ProgressTimer::Type::BAR);
 	opplayerHPBar->setBarChangeRate(Point(1, 0));
 	opplayerHPBar->setMidpoint(Point(0, 1));
@@ -145,7 +147,7 @@ void layerPlayer::buyExp(Ref* pSender)
 	else
 	{
 		Label* label = Label::createWithTTF("Not enough money!", "./fonts/betterFont.ttf", 36);
-		label->setPosition(800,400);
+		label->setPosition(800, 400);
 		this->addChild(label, 1);
 		auto action = FadeOut::create(2.0f);
 		label->runAction(action);

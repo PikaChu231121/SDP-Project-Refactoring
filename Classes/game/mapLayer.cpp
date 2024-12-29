@@ -1,4 +1,6 @@
+﻿// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include"game/mapLayer.h"
+#include "ResourceManager.h"
 
 Point chessMap[CHESS_IN_A_COL + 2][CHESS_IN_A_ROW];
 bool haveChess[CHESS_IN_A_COL + 2][CHESS_IN_A_ROW] = { false };
@@ -20,7 +22,7 @@ bool mapLayer::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    auto gameBackGround = Sprite::create("./gameScene/gameBackground.png");
+    auto gameBackGround = ResourceManager::CreateNewSprite("./gameScene/gameBackground.png");
 
     gameBackGround->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
     gameBackGround->setScale(visibleSize.width / gameBackGround->getContentSize().width,
