@@ -1,17 +1,17 @@
 ﻿#pragma once
-// Refactored with Adapter Pattern
+// Refactored with Facade Pattern
 
-#ifndef PLAYER_ADAPTER_H
-#define PLAYER_ADAPTER_H
+#ifndef PLAYER_FACADE_H
+#define PLAYER_FACADE_H
 
 #include "player/playerData.h"
 #include "hero/hero.h"
-class PlayerAdapter {
+class PlayerFacade {
 private:
     playerData* player;
 
 public:
-    explicit PlayerAdapter(playerData* p) : player(p) {}
+    explicit PlayerFacade(playerData* p) : player(p) {}
 
     int getPlayerMoney() const {
         return player->getPlayerMoney();
@@ -32,7 +32,11 @@ public:
     void addHeroToWaitingList(Hero* hero) {
         ccArrayAppendObject(player->waitingArray, hero);
     }
+
+    playerData* getPlayerData() const {
+        return player;
+    }
 };
 
-#endif // PLAYER_ADAPTER_H
+#endif // PLAYER_FACADE_H
 

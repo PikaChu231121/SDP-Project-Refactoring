@@ -1,12 +1,12 @@
 ﻿// Refactored with Factory Method Pattern
-// Refactored with Adapter Pattern
+// Refactored with Facade Pattern
 
 #ifndef _LAYERS_SHOP_H_
 #define _LAYERS_SHOP_H_
 
 #include "hero/allheros.h"
-#include "heroAdapter.h"
-#include "playerAdapter.h"
+#include "hero/heroFacade.h"
+#include "player/playerFacade.h"
 #include "cocos2d.h"
 #include <stdlib.h>
 #include <random>
@@ -17,7 +17,7 @@ USING_NS_CC;
 class layerShop : public Layer
 {
 private:
-	PlayerAdapter* playerAdapter;
+	PlayerFacade* playerFacade;
 	int x = 470;
 	const string heroValue[6] =
 	{ "","1 coin","2 coins","3 coins","4 coins","5 coins" };

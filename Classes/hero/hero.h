@@ -57,9 +57,10 @@ public:
 	Hero* getEnemyByDistance(Hero* myHero, bool mode, bool isMyHero);
 	bool isInAttackRange(Hero* myHero, Hero* enemyHero);
 	bool isWin(playerData* myPlayer, playerData* opPlayer);
-	int getBlood() { return blood; }
-	int getMaxBlood() { return maxBlood; }
-	void recover();
+
+	virtual int getBlood() { return blood; }
+	virtual int getMaxBlood() { return maxBlood; }
+	virtual void recover();
 	bool connection(const playerData& myPlayerData);
 
 	/*******************************12.30添加(可能有已经添加过的，如type)*************************/
@@ -83,16 +84,17 @@ public:
 		ofPlayer = player;
 	}
 
-	int getType() { return type; } // 返回的是每种英雄的类型，playerData中的enum，默认每种英雄已经有了各自的type
+	virtual int getType() { return type; } // 返回的是每种英雄的类型，playerData中的enum，默认每种英雄已经有了各自的type
 
 	/*******************************12.30添加*************************/
 	virtual void upLevel(Hero* hero) {};
 
 	/*用于装备修改属性*/
-	void changeAttackDistance(int value) { attackDistance += value; }
-	void changePro(int value) { protect += value; }
-	void changeSpeed(double value) { speed += value; }
-	void changeAttack(int value) { attack += value; }
+	virtual void changeAttackDistance(int value) { attackDistance += value; }
+	virtual void changePro(int value) { protect += value; }
+	virtual void changeSpeed(double value) { speed += value; }
+	virtual void changeAttack(int value) { attack += value; }
+
 	void heroAnimation(string picturename, const int picturenum, Sprite* sprite, const double speed, const int loop);
 	Node* Hero::createHealthBar(double percentage);
 

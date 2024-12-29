@@ -1,18 +1,18 @@
 ﻿#pragma once
-// Refactored with Adapter Pattern
+// Refactored with Facade Pattern
 
-#ifndef HERO_ADAPTER_H
-#define HERO_ADAPTER_H
+#ifndef HERO_FACADE_H
+#define HERO_FACADE_H
 
 #include "hero/heroCreator.h"
 #include "player/playerData.h"
 
-class HeroAdapter {
+class HeroFacade {
 private:
     HeroCreator* creator;
 
 public:
-    explicit HeroAdapter(HeroCreator* c) : creator(c) {}
+    explicit HeroFacade(HeroCreator* c) : creator(c) {}
 
     bool canPurchaseHero(int cost, const playerData& player) {
         return HeroCreator::canPurchaseHero(cost, player);
@@ -31,4 +31,4 @@ public:
     }
 };
 
-#endif // HERO_ADAPTER_H
+#endif // HERO_FACADE_H
