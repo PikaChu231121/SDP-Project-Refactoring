@@ -1,4 +1,4 @@
-// Refactored with Delegation Pattern and Lazy Loading Pattern
+﻿// Refactored with Delegation Pattern and Lazy Loading Pattern
 #include "yn.h"
 #include "ResourceManager.h"
 
