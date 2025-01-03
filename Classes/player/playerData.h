@@ -1,66 +1,64 @@
+// Refactored with State Pattern
 #ifndef _DATA_PLAYER_H_
 #define _DATA_PLAYER_H_
 
 #include "cocos2d.h"
 #include "game/gameData.h"
+#include "PlayerState.h"
 
-#define maxHeroNum 20		// 最大玩家英雄数量
+#define maxHeroNum 20 // 最大玩家英雄数量
 USING_NS_CC;
-
-class HeroCreator;
 
 class playerData : public Ref
 {
 private:
-	/*********玩家基本信息**********/
-	int playerMaxHealth = 100;					//玩家生命值
-	int playerHealth = playerMaxHealth;			//玩家当前生命值
-	int playerLevel = 1;						//玩家等级
-	int playerExp = 0;							//玩家经验值
-	int playerMoney = 10;						//玩家金钱
-	int expToLevelUp = 2;						//升级所需经验值
-	bool playerHaveNewHero = false;				//玩家是否拥有新英雄
+	int playerMaxHealth = 100;
+	int playerHealth = playerMaxHealth;
+	int playerLevel = 1;
+	int playerExp = 0;
+	int playerMoney = 10;
+	int expToLevelUp = 2;
 
-	friend class sceneGame;
-	friend class layerPlayer;
-	friend class layerHero;
-	friend class aiPlayer;
-	friend class layerSettings;
-	friend class layerShop;
+	PlayerState *currentState; // 当前状态
 
 public:
-	int getPlayerMoney() const { return playerMoney; }	
-    void setPlayerMoney(int money) { playerMoney = money; }
+	playerData() : currentState(nullptr) {}
+	~playerData()
+	{
+		if (currentState)
+			delete currentState;
+	}
+
+	int getPlayerMoney() const { return playerMoney; }
+	void setPlayerMoney(int money) { playerMoney = money; }
 	void deductMoney(int amount) { playerMoney -= amount; }
 	int getPlayerExp() const { return playerExp; }
 	void setPlayerExp(int exp) { playerExp = exp; }
 	void addExp(int amount) { playerExp += amount; }
 	int getPlayerLevel() const { return playerLevel; }
 
+	void playerHurt(int damageBlood) { this->playerHealth -= damageBlood; }
 
-	void playerHurt(int damageBlood) { this->playerHealth -= damageBlood; }		//玩家受伤
-	void updateMoneyAndExp();													//更新金钱和经验值
-	void playerInit();															//玩家初始化
-	void calExp();								//计算经验值
+	void updateMoneyAndExp()
+	{
+		if (currentState)
+			currentState->updateMoneyAndExp(this);
+	}
+	void calExp()
+	{
+		if (currentState)
+			currentState->calExp(this);
+	}
 
-	/*********玩家英雄信息**********/
-	ccArray* waitingArray = ccArrayNew(100);	//玩家备战阵容
-	ccArray* battleArray = ccArrayNew(100);		//玩家战斗阵容
-	int heroNum[maxHeroNum] = { 0 };			//玩家拥有英雄数量
-	heroInfo heroForBuy[5];				//玩家可购买英雄
+	void playerInit();
 
-
-
-	/*********玩家装备信息**********/
-	//ccArray* equippedArray = ccArrayNew(100);		//玩家装备阵容（已装备）
-	//ccArray* unequippedArray = ccArrayNew(100);		//玩家装备背包（未装备）
-	//int equippedNum = 0;							//玩家已装备装备数量
-	friend class HeroCreator;
+	void changeState(PlayerState *newState)
+	{
+		if (currentState)
+			delete currentState;
+		currentState = newState;
+		currentState->onEnter(this);
+	}
 };
 
-extern playerData myPlayerData;
-extern playerData opPlayerData;
-
-
 #endif // !_DATA_PLAYER_H_
-

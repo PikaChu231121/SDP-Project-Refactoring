@@ -1,27 +1,53 @@
+// Refactored with Observer pattern
 #include "game/gameData.h"
 
 gameData* globalGameData = gameData::createGameData();
 
 gameData* gameData::createGameData()
 {
-	auto game = gameData::create();
-	game->retain();
-	return game;
+    auto game = gameData::create();
+    game->retain();
+    return game;
 }
 
 bool gameData::init()
 {
-	if (!Scene::init())
-	{
-		return false;
-	}
+    if (!Scene::init())
+    {
+        return false;
+    }
 
-	return true;
+    gameTurn = 0; // 初始化回合数
+    return true;
 }
 
 void gameData::initGameStart()
 {
-	gameTurn = 0;
+    gameTurn = 0;
+}
+
+void gameData::changeGameTurn()
+{
+    gameTurn++;
+    notifyObservers(); // 通知所有观察者
+}
+
+void gameData::addObserver(GameObserver* observer)
+{
+    observers.push_back(observer);
+}
+
+void gameData::removeObserver(GameObserver* observer)
+{
+    observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
+}
+
+void gameData::notifyObservers()
+{
+    for (auto observer : observers)
+    {
+        observer->onGameTurnChanged(gameTurn); // 通知每个观察者
+    }
 }
 
 heroInfo heroList[designedHeroNum] = {
