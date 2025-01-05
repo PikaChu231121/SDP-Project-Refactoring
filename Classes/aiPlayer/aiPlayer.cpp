@@ -1,5 +1,6 @@
 ﻿// Refactored with Factory Method Pattern
 // Refactored with Composite Pattern
+// Refactored with ObserverPattern
 
 #include "./aiPlayer/aiPlayer.h"
 
@@ -22,6 +23,11 @@ aiPlayer::aiPlayer()
 	rootBehavior->add(checkUpgrade);
 	rootBehavior->add(checkIfBuyExp);
 	rootBehavior->add(checkIfBuyHero);
+
+	// 注册观察者
+	opPlayerData.attach(shopRefresh);
+	opPlayerData.attach(checkIfBuyExp);
+	opPlayerData.attach(checkIfBuyHero);
 
 	CCLOG("AIPlayer constructor executed.\n");
 }
