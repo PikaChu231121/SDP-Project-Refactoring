@@ -1,24 +1,65 @@
-#ifndef _SCENES_SETTINGS_H_
-#define _SCENES_SETTINGS_H_
-#include "cocos2d.h"
+#pragma once
+#include "ICommand.h"
+#include "../mainMenu.h"
+#include "../sceneAbout.h"
+#include "../sceneName.h"
+#include "../sceneSetting.h"
 
-class sceneSettings : public cocos2d::Scene
+class SceneTransitionCommand : public ICommand
 {
+protected:
+	cocos2d::Scene *targetScene;
+	float transitionTime;
+
 public:
+	SceneTransitionCommand(cocos2d::Scene *scene, float time = 1.0f)
+		: targetScene(scene), transitionTime(time) {}
 
-	static cocos2d::Scene* createScene();
-
-	virtual bool init();
-	void settingsBack(cocos2d::Ref* pSender);
-
-	void soundOn(cocos2d::Ref* pSender);
-	void soundOff(cocos2d::Ref* pSender);
-
-	CREATE_FUNC(sceneSettings);
-
+	void execute() override
+	{
+		auto transition = cocos2d::TransitionFade::create(transitionTime, targetScene);
+		cocos2d::Director::getInstance()->replaceScene(transition);
+	}
 };
 
+class NewGameCommand : public ICommand
+{
+public:
+	void execute() override
+	{
+		auto scene = sceneName::createScene();
+		auto transition = cocos2d::TransitionFade::create(1.0f, scene);
+		cocos2d::Director::getInstance()->replaceScene(transition);
+	}
+};
 
+class SettingsCommand : public ICommand
+{
+public:
+	void execute() override
+	{
+		auto scene = sceneSettings::createScene();
+		auto transition = cocos2d::TransitionFade::create(1.0f, scene);
+		cocos2d::Director::getInstance()->replaceScene(transition);
+	}
+};
 
+class AboutCommand : public ICommand
+{
+public:
+	void execute() override
+	{
+		auto scene = sceneAbout::createScene();
+		auto transition = cocos2d::TransitionFade::create(1.0f, scene);
+		cocos2d::Director::getInstance()->replaceScene(transition);
+	}
+};
 
-#endif // !_SCENES_SETTINGS_H_
+class ExitCommand : public ICommand
+{
+public:
+	void execute() override
+	{
+		cocos2d::Director::getInstance()->end();
+	}
+};

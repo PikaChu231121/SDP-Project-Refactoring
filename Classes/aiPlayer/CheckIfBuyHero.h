@@ -1,5 +1,5 @@
 ﻿// Refactored with Composite Pattern
-
+// Refactored with ObserverPattern
 #pragma once
 #include "AIComponent.h"
 #include "player/playerData.h"
@@ -12,6 +12,18 @@ public:
     {
         if (checkLimit() && checkHighGoldHero() && opPlayerData.getPlayerMoney() >= 2) // 不超过人数限制且购买了高费英雄
             refresh();                                                                 // 刷新商店
+    }
+
+    void onNotify(const std::string &event, const PlayerData &data) override
+    {
+        if (event == "MONEY_CHANGED")
+        {
+            // 当金钱变化时，可能需要重新评估是否购买英雄
+            if (data.getPlayerMoney() >= 2)
+            {
+                execute();
+            }
+        }
     }
 
 private:

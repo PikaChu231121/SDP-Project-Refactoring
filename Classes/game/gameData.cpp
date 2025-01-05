@@ -1,12 +1,15 @@
 // Refactored with Observer pattern
 #include "game/gameData.h"
+#include "hero.h"
 
-gameData* globalGameData = gameData::createGameData();
+const int designedHeroNum = 8;
 
-gameData* gameData::createGameData()
+gameData *globalGameData = gameData::createGameData();
+
+gameData *gameData::createGameData()
 {
     auto game = gameData::create();
-    game->retain();
+    game->autorelease();
     return game;
 }
 
@@ -32,12 +35,12 @@ void gameData::changeGameTurn()
     notifyObservers(); // 通知所有观察者
 }
 
-void gameData::addObserver(GameObserver* observer)
+void gameData::addObserver(IObserver *observer)
 {
     observers.push_back(observer);
 }
 
-void gameData::removeObserver(GameObserver* observer)
+void gameData::removeObserver(IObserver *observer)
 {
     observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
 }
@@ -50,13 +53,20 @@ void gameData::notifyObservers()
     }
 }
 
-heroInfo heroList[designedHeroNum] = {
-	{ 1, "./hero/tfns.png", 1, false },
-	{ 2, "./hero/bqzs.png", 1, false },
-	{ 3, "./hero/mlps.png", 1, false },
-	{ 4, "./hero/qxsq.png", 2, false },
-	{ 5, "./hero/wlshz.png", 2, false },
-	{ 6, "./hero/yn.png", 3, false },
-	{ 7, "./hero/ltzz.png", 3, false },
-	{ 8, "./hero/snzx.png", 4, false }
+struct hero
+{
+    int id;
+    std::string picName;
+    int cost;
+    bool buy;
 };
+
+hero heroList[designedHeroNum] = {
+    {1, "./hero/tfns.png", 1, false},
+    {2, "./hero/bqzs.png", 1, false},
+    {3, "./hero/mlps.png", 1, false},
+    {4, "./hero/qxsq.png", 2, false},
+    {5, "./hero/wlshz.png", 2, false},
+    {6, "./hero/yn.png", 3, false},
+    {7, "./hero/ltzz.png", 3, false},
+    {8, "./hero/snzx.png", 4, false}};

@@ -3,6 +3,7 @@
 #include "playerData.h"
 #include "NormalState.h"
 #include <iostream>
+using namespace std;
 
 void BattleState::updateMoneyAndExp(playerData *player)
 {
@@ -20,5 +21,5 @@ void BattleState::calExp(playerData *player)
 void BattleState::onEnter(playerData *player)
 {
     std::cout << "Player entered Battle State." << std::endl;
-    player->playerHealth -= 10;
+    player->decreaseHealth(10);
 }

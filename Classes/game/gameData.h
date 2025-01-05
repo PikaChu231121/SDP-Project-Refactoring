@@ -4,29 +4,31 @@
 
 #include "cocos2d.h"
 #include <vector>
-#include "GameObserver.h" // 包含观察者接口头文件
+#include "game/GameObserver.h" // Update the path if needed
+#include "aiPlayer/Observer/IObserver.h"
 
 USING_NS_CC;
 
-class gameData : public Scene
+class gameData : public cocos2d::Scene
 {
 private:
-    std::vector<GameObserver*> observers; // 观察者列表
+    std::vector<GameObserver *> observers; // 鄄斜
 
 public:
     int gameTurn;
 
-    static gameData* createGameData();
+    CREATE_FUNC(gameData);
+    static gameData *createGameData();
     virtual bool init();
     void initGameStart();
 
-    // 回合管理
+    // 睾瞎
     int getGameTurn() { return gameTurn; }
     void changeGameTurn();
 
-    // 观察者管理
-    void addObserver(GameObserver* observer);
-    void removeObserver(GameObserver* observer);
+    // 鄄吖
+    void addObserver(IObserver *observer);
+    void removeObserver(IObserver *observer);
     void notifyObservers();
 };
 

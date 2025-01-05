@@ -1,12 +1,12 @@
 // Refactored with Observer pattern
-#ifndef GAME_OBSERVER_H
-#define GAME_OBSERVER_H
+#ifndef _GAME_OBSERVER_H_
+#define _GAME_OBSERVER_H_
 
 class GameObserver
 {
 public:
-    virtual ~GameObserver() {}
-    virtual void onGameTurnChanged(int newTurn) = 0; // 回合变化事件
+    virtual void onGameTurnChanged(int turn) = 0;
+    virtual ~GameObserver() = default;
 };
 
-#endif // GAME_OBSERVER_H
+#endif

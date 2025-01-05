@@ -2,6 +2,7 @@
 #include "NormalState.h"
 #include "playerData.h"
 #include <iostream>
+using namespace std;
 
 void NormalState::updateMoneyAndExp(playerData *player)
 {
